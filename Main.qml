@@ -1,6 +1,7 @@
 import QtQuick
 import QtQuick.Window
 import QtQuick.Layouts
+import "Theme.js" as T
 
 Window {
     id: win
@@ -8,74 +9,62 @@ Window {
     visibility: Window.FullScreen
     width: 1280
     height: 720
+    color: T.bg
     title: "GSOI Automotive OS"
-    color: "#0A0E14"
 
-    // Palette del cockpit (tema scuro automotive).
-    readonly property color accent: "#00E0C6"
-    readonly property color surface: "#141A24"
-    readonly property color stroke: "#1F2A38"
-    readonly property color textMain: "#E6EDF3"
-    readonly property color textMuted: "#8A97A6"
+    property string screen: "home"
+    readonly property var order: ["home", "nav", "media", "agent", "conn",
+                                   "climate", "cluster", "phone", "settings"]
 
-    ColumnLayout {
-        anchors.fill: parent
-        anchors.margins: 28
-        spacing: 22
-
-        StatusBar {
-            Layout.fillWidth: true
-            accent: win.accent
-            textMain: win.textMain
-            textMuted: win.textMuted
-        }
+    // --- Responsive -------------------------------------------------------
+    // Tutto e' disegnato a una risoluzione di riferimento (1280x720) e poi
+    // scalato in modo uniforme per riempire lo schermo reale mantenendo le
+    // proporzioni: il cockpit si adatta a display di qualsiasi pollice.
+    Item {
+        id: canvas
+        width: 1280
+        height: 720
+        anchors.centerIn: parent
+        scale: Math.min(win.width / width, win.height / height)
+        transformOrigin: Item.Center
 
         RowLayout {
-            Layout.fillWidth: true
-            Layout.fillHeight: true
-            spacing: 22
+            anchors.fill: parent
+            spacing: 0
 
-            GridLayout {
-                Layout.fillWidth: true
+            NavRail {
+                Layout.preferredWidth: 200
                 Layout.fillHeight: true
-                columns: 4
-                rowSpacing: 18
-                columnSpacing: 18
-
-                Repeater {
-                    model: [
-                        { label: "Jarvis" },
-                        { label: "Auto" },
-                        { label: "Mappa" },
-                        { label: "Musica" },
-                        { label: "Telefono" },
-                        { label: "Casa" },
-                        { label: "Bluetooth" },
-                        { label: "Impostazioni" }
-                    ]
-                    delegate: Tile {
-                        required property var modelData
-                        Layout.fillWidth: true
-                        Layout.fillHeight: true
-                        label: modelData.label
-                        accent: win.accent
-                        surface: win.surface
-                        stroke: win.stroke
-                        textMain: win.textMain
-                        onActivated: console.log("Tile attivato:", label)
-                    }
-                }
+                current: win.screen
+                onSelect: (s) => win.screen = s
             }
 
-            VehiclePanel {
-                Layout.preferredWidth: 300
+            ColumnLayout {
+                Layout.fillWidth: true
                 Layout.fillHeight: true
-                accent: win.accent
-                surface: win.surface
-                stroke: win.stroke
-                textMain: win.textMain
-                textMuted: win.textMuted
+                spacing: 0
+
+                Header { Layout.fillWidth: true }
+
+                StackLayout {
+                    Layout.fillWidth: true
+                    Layout.fillHeight: true
+                    currentIndex: Math.max(0, win.order.indexOf(win.screen))
+
+                    HomeScreen {}
+                    NavScreen {}
+                    MediaScreen {}
+                    AgentScreen {}
+                    ConnectScreen {}
+                    ClimateScreen {}
+                    ClusterScreen {}
+                    PhoneScreen {}
+                    SettingsScreen {}
+                }
             }
         }
     }
+
+    // Esc chiude l'app: comodo in sviluppo (sul dispositivo non serve).
+    Shortcut { sequence: "Esc"; onActivated: Qt.quit() }
 }

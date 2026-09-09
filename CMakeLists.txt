@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.21)
 
-project(gsoi-cockpit VERSION 0.1 LANGUAGES CXX)
+project(gsoi-cockpit VERSION 0.2 LANGUAGES CXX)
 
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_CXX_STANDARD 17)
@@ -18,11 +18,21 @@ qt_add_qml_module(gsoi-cockpit
     URI GsoiCockpit
     VERSION 1.0
     QML_FILES
+        Theme.js
         Main.qml
-        Tile.qml
-        StatusBar.qml
-        VehiclePanel.qml
-        Readout.qml
+        NavRail.qml
+        Header.qml
+        SectionLabel.qml
+        PrimaryButton.qml
+        HomeScreen.qml
+        NavScreen.qml
+        MediaScreen.qml
+        AgentScreen.qml
+        ConnectScreen.qml
+        ClimateScreen.qml
+        ClusterScreen.qml
+        PhoneScreen.qml
+        SettingsScreen.qml
 )
 
 target_link_libraries(gsoi-cockpit PRIVATE Qt6::Quick Qt6::Gui)
