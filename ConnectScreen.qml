@@ -3,6 +3,8 @@ import QtQuick.Layouts
 import "Theme.js" as T
 
 Item {
+    property var vehicle: null
+
     RowLayout {
         anchors.fill: parent
         anchors.margins: 30
@@ -52,9 +54,24 @@ Item {
                 }
             }
             Rectangle { Layout.fillWidth: true; height: 1; color: T.divider; Layout.topMargin: 8 }
+            RowLayout {
+                Layout.topMargin: 8
+                spacing: 8
+                Rectangle {
+                    width: 10; height: 10; radius: 5
+                    color: (vehicle && vehicle.mode === "connected") ? "#30a46c" : T.accent2
+                    Layout.alignment: Qt.AlignVCenter
+                }
+                Text {
+                    text: (vehicle && vehicle.mode === "connected")
+                          ? "Connesso al server GSOI"
+                          : "Offline — solo funzioni locali"
+                    font.family: T.serif; font.pixelSize: 16; color: T.n700
+                }
+            }
             Text {
                 text: "Dati veicolo · 4.2 GB di 20 GB questo mese\nAggiornamenti solo via Wi-Fi"
-                font.family: T.serif; font.pixelSize: 16; color: T.n700; Layout.topMargin: 8; lineHeight: 1.5
+                font.family: T.serif; font.pixelSize: 16; color: T.n700; Layout.topMargin: 10; lineHeight: 1.5
             }
             Item { Layout.fillHeight: true }
         }

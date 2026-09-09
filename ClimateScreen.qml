@@ -20,8 +20,8 @@ Item {
             }
             RowLayout {
                 spacing: 12
-                PrimaryButton { text: "−"; primary: false }
-                PrimaryButton { text: "+"; primary: false }
+                IconButton { icon: "minus"; size: 60 }
+                IconButton { icon: "plus"; size: 60 }
             }
             Text { text: "Sedile riscaldato · liv. 2\nVolante · acceso"; font.family: T.serif; font.pixelSize: 16; color: T.n700; Layout.topMargin: 18; lineHeight: 1.5 }
             Item { Layout.fillHeight: true }
@@ -39,8 +39,8 @@ Item {
             }
             RowLayout {
                 spacing: 12
-                PrimaryButton { text: "−"; primary: false }
-                PrimaryButton { text: "+"; primary: false }
+                IconButton { icon: "minus"; size: 60 }
+                IconButton { icon: "plus"; size: 60 }
             }
             Text { text: "Sedile riscaldato · off\nSincronizzato · no"; font.family: T.serif; font.pixelSize: 16; color: T.n700; Layout.topMargin: 18; lineHeight: 1.5 }
             Item { Layout.fillHeight: true }

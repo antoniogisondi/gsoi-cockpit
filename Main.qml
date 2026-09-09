@@ -16,10 +16,10 @@ Window {
     readonly property var order: ["home", "nav", "media", "agent", "conn",
                                    "climate", "cluster", "phone", "settings"]
 
-    // --- Responsive -------------------------------------------------------
-    // Tutto e' disegnato a una risoluzione di riferimento (1280x720) e poi
-    // scalato in modo uniforme per riempire lo schermo reale mantenendo le
-    // proporzioni: il cockpit si adatta a display di qualsiasi pollice.
+    // Dati live da Jarvis Mini (server HTTP locale).
+    VehicleData { id: vehicle }
+
+    // --- Responsive: tutto disegnato a 1280x720 e scalato uniformemente. ---
     Item {
         id: canvas
         width: 1280
@@ -44,20 +44,20 @@ Window {
                 Layout.fillHeight: true
                 spacing: 0
 
-                Header { Layout.fillWidth: true }
+                Header { Layout.fillWidth: true; vehicle: vehicle }
 
                 StackLayout {
                     Layout.fillWidth: true
                     Layout.fillHeight: true
                     currentIndex: Math.max(0, win.order.indexOf(win.screen))
 
-                    HomeScreen {}
+                    HomeScreen { vehicle: vehicle }
                     NavScreen {}
-                    MediaScreen {}
+                    MediaScreen { vehicle: vehicle }
                     AgentScreen {}
-                    ConnectScreen {}
+                    ConnectScreen { vehicle: vehicle }
                     ClimateScreen {}
-                    ClusterScreen {}
+                    ClusterScreen { vehicle: vehicle }
                     PhoneScreen {}
                     SettingsScreen {}
                 }
@@ -65,6 +65,5 @@ Window {
         }
     }
 
-    // Esc chiude l'app: comodo in sviluppo (sul dispositivo non serve).
     Shortcut { sequence: "Esc"; onActivated: Qt.quit() }
 }

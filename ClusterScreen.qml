@@ -3,6 +3,10 @@ import QtQuick.Layouts
 import "Theme.js" as T
 
 Item {
+    id: root
+    property var vehicle: null
+    readonly property string spd: (vehicle ? vehicle.speed : 0).toString()
+
     RowLayout {
         anchors.fill: parent
         anchors.margins: 30
@@ -19,11 +23,11 @@ Item {
                 Layout.preferredHeight: 180
                 // frange di colore (mis-registro di stampa)
                 Text { anchors.centerIn: parent; anchors.horizontalCenterOffset: 3; anchors.verticalCenterOffset: 2
-                    text: "58"; font.family: T.serif; font.pixelSize: 190; font.weight: Font.DemiBold; color: T.accent2 }
+                    text: root.spd; font.family: T.serif; font.pixelSize: 190; font.weight: Font.DemiBold; color: T.accent2 }
                 Text { anchors.centerIn: parent; anchors.horizontalCenterOffset: -3; anchors.verticalCenterOffset: -2
-                    text: "58"; font.family: T.serif; font.pixelSize: 190; font.weight: Font.DemiBold; color: T.accent }
+                    text: root.spd; font.family: T.serif; font.pixelSize: 190; font.weight: Font.DemiBold; color: T.accent }
                 Text { anchors.centerIn: parent
-                    text: "58"; font.family: T.serif; font.pixelSize: 190; font.weight: Font.DemiBold; color: T.text }
+                    text: root.spd; font.family: T.serif; font.pixelSize: 190; font.weight: Font.DemiBold; color: T.text }
             }
             Text { text: "km/h"; font.family: T.serif; font.pixelSize: 26; color: T.n700; Layout.leftMargin: 8 }
             RowLayout {
@@ -47,7 +51,11 @@ Item {
             Text { text: "Assistente di corsia attivo"; font.family: T.serif; font.pixelSize: 20; color: T.accent700 }
             Text { text: "Distanza · 2 barre"; font.family: T.serif; font.pixelSize: 20; color: T.accent700 }
             Text { text: "Cruise impostato a 50"; font.family: T.serif; font.pixelSize: 20; color: T.n700 }
-            Text { text: "⚠ Gomma ant. sinistra bassa"; font.family: T.serif; font.pixelSize: 20; color: T.accent2_700 }
+            RowLayout {
+                spacing: 8
+                Icon { name: "warning"; size: 22; color: T.accent2_700 }
+                Text { text: "Gomma ant. sinistra bassa"; font.family: T.serif; font.pixelSize: 20; color: T.accent2_700 }
+            }
         }
     }
 }

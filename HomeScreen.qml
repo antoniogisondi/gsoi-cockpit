@@ -3,6 +3,8 @@ import QtQuick.Layouts
 import "Theme.js" as T
 
 Item {
+    property var vehicle: null
+
     ColumnLayout {
         anchors.fill: parent
         anchors.leftMargin: 30
@@ -70,8 +72,8 @@ Item {
                     }
                     ColumnLayout {
                         spacing: 2
-                        Text { text: "Ostinato"; font.family: T.serif; font.pixelSize: 24; font.weight: Font.DemiBold; color: T.text }
-                        Text { text: "Marta Bellini Trio"; font.family: T.serif; font.pixelSize: 16; color: T.n700 }
+                        Text { text: vehicle ? vehicle.mediaTitle : "—"; font.family: T.serif; font.pixelSize: 24; font.weight: Font.DemiBold; color: T.text }
+                        Text { text: vehicle ? vehicle.mediaArtist : ""; font.family: T.serif; font.pixelSize: 16; color: T.n700 }
                         Text { text: "Bluetooth · iPhone di Ana"; font.family: T.serif; font.pixelSize: 14; color: T.n600; Layout.topMargin: 6 }
                     }
                 }
@@ -86,8 +88,8 @@ Item {
                 SectionLabel { text: "Veicolo" }
                 RowLayout {
                     spacing: 8
-                    Text { text: "84%"; font.family: T.serif; font.pixelSize: 40; font.weight: Font.DemiBold; color: T.text }
-                    Text { text: "412 km"; font.family: T.serif; font.pixelSize: 17; color: T.n700; Layout.alignment: Qt.AlignBottom; Layout.bottomMargin: 8 }
+                    Text { text: (vehicle ? vehicle.chargePct : 84) + "%"; font.family: T.serif; font.pixelSize: 40; font.weight: Font.DemiBold; color: T.text }
+                    Text { text: (vehicle ? vehicle.rangeKm : 412) + " km"; font.family: T.serif; font.pixelSize: 17; color: T.n700; Layout.alignment: Qt.AlignBottom; Layout.bottomMargin: 8 }
                 }
                 Rectangle {
                     Layout.fillWidth: true
@@ -95,7 +97,7 @@ Item {
                     height: 8
                     color: T.n300
                     Layout.topMargin: 8
-                    Rectangle { width: parent.width * 0.84; height: parent.height; color: T.accent }
+                    Rectangle { width: parent.width * (vehicle ? vehicle.chargePct / 100 : 0.84); height: parent.height; color: T.accent }
                 }
                 Text {
                     text: "Gomme ok · Abitacolo 21°\nSoftware aggiornato"
@@ -111,7 +113,7 @@ Item {
             Layout.fillWidth: true
             Layout.topMargin: 14
             spacing: 14
-            Rectangle { width: 10; height: 10; radius: 5; color: T.accent2 }
+            Icon { name: "sparkle"; size: 24; color: T.accent2_700 }
             Text {
                 Layout.fillWidth: true
                 text: "Agent — Il tuo appuntamento delle 10:30 è stato spostato alle 10:00. Parti fra sei minuti?"

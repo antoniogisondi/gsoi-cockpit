@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.21)
 
-project(gsoi-cockpit VERSION 0.2 LANGUAGES CXX)
+project(gsoi-cockpit VERSION 0.3 LANGUAGES CXX)
 
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_CXX_STANDARD 17)
@@ -19,7 +19,11 @@ qt_add_qml_module(gsoi-cockpit
     VERSION 1.0
     QML_FILES
         Theme.js
+        Icons.js
         Main.qml
+        Icon.qml
+        IconButton.qml
+        VehicleData.qml
         NavRail.qml
         Header.qml
         SectionLabel.qml
@@ -33,6 +37,8 @@ qt_add_qml_module(gsoi-cockpit
         ClusterScreen.qml
         PhoneScreen.qml
         SettingsScreen.qml
+    RESOURCES
+        Phosphor.ttf
 )
 
 target_link_libraries(gsoi-cockpit PRIVATE Qt6::Quick Qt6::Gui)

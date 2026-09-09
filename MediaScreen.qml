@@ -3,6 +3,8 @@ import QtQuick.Layouts
 import "Theme.js" as T
 
 Item {
+    property var vehicle: null
+
     RowLayout {
         anchors.fill: parent
         anchors.margins: 30
@@ -19,8 +21,8 @@ Item {
                     GradientStop { position: 1.0; color: T.n800 }
                 }
             }
-            Text { text: "Ostinato"; font.family: T.serif; font.pixelSize: 32; font.weight: Font.DemiBold; color: T.text }
-            Text { text: "Marta Bellini Trio · Nocturnes for a City"; font.family: T.serif; font.pixelSize: 17; color: T.n700; wrapMode: Text.WordWrap; Layout.fillWidth: true }
+            Text { text: vehicle ? vehicle.mediaTitle : "—"; font.family: T.serif; font.pixelSize: 32; font.weight: Font.DemiBold; color: T.text }
+            Text { text: (vehicle ? vehicle.mediaArtist : "") + " · Nocturnes for a City"; font.family: T.serif; font.pixelSize: 17; color: T.n700; wrapMode: Text.WordWrap; Layout.fillWidth: true }
             Item { Layout.fillHeight: true }
         }
 
@@ -66,9 +68,11 @@ Item {
             RowLayout {
                 Layout.topMargin: 8
                 spacing: 18
-                PrimaryButton { text: "◀◀"; primary: false }
-                PrimaryButton { text: "❚❚" }
-                PrimaryButton { text: "▶▶"; primary: false }
+                IconButton { icon: "skip-back"; size: 56 }
+                IconButton { icon: "pause"; size: 68; round: true; primary: true }
+                IconButton { icon: "skip-forward"; size: 56 }
+                Item { Layout.fillWidth: true }
+                Icon { name: "speaker-high"; size: 24; color: T.n700 }
             }
         }
     }

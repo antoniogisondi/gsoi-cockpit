@@ -10,7 +10,6 @@ Rectangle {
 
     color: T.bg
 
-    // Divisore verticale a destra.
     Rectangle {
         anchors.right: parent.right
         width: 1
@@ -40,27 +39,44 @@ Rectangle {
 
         Repeater {
             model: [
-                ["home", "Home"], ["nav", "Naviga"], ["media", "Musica"],
-                ["agent", "Agent"], ["conn", "Connessioni"], ["climate", "Clima"],
-                ["cluster", "Cruscotto"], ["phone", "Telefono"], ["settings", "Impostazioni"]
+                ["home", "Home", "house"],
+                ["nav", "Naviga", "navigation-arrow"],
+                ["media", "Musica", "music-notes"],
+                ["agent", "Agent", "sparkle"],
+                ["conn", "Connessioni", "bluetooth-connected"],
+                ["climate", "Clima", "thermometer-simple"],
+                ["cluster", "Cruscotto", "gauge"],
+                ["phone", "Telefono", "phone"],
+                ["settings", "Impostazioni", "gear"]
             ]
             delegate: Rectangle {
+                id: item
                 required property var modelData
+                readonly property bool active: root.current === modelData[0]
                 Layout.fillWidth: true
                 implicitHeight: 46
                 radius: 2
-                color: root.current === modelData[0]
-                       ? Qt.rgba(0, 0.53, 0.69, 0.12)
-                       : (ma.containsMouse ? Qt.rgba(0.12, 0.12, 0.11, 0.06) : "transparent")
+                color: item.active ? Qt.rgba(0, 0.53, 0.69, 0.12)
+                                   : (ma.containsMouse ? Qt.rgba(0.12, 0.12, 0.11, 0.06) : "transparent")
 
-                Text {
-                    anchors.verticalCenter: parent.verticalCenter
-                    x: 12
-                    text: modelData[1]
-                    font.family: T.serif
-                    font.pixelSize: 18
-                    font.weight: Font.DemiBold
-                    color: root.current === modelData[0] ? T.accent700 : T.text
+                RowLayout {
+                    anchors.fill: parent
+                    anchors.leftMargin: 12
+                    anchors.rightMargin: 10
+                    spacing: 12
+                    Icon {
+                        name: item.modelData[2]
+                        size: 24
+                        color: item.active ? T.accent700 : T.text
+                    }
+                    Text {
+                        Layout.fillWidth: true
+                        text: item.modelData[1]
+                        font.family: T.serif
+                        font.pixelSize: 18
+                        font.weight: Font.DemiBold
+                        color: item.active ? T.accent700 : T.text
+                    }
                 }
 
                 MouseArea {
