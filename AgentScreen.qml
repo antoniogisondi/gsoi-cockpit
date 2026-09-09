@@ -3,6 +3,8 @@ import QtQuick.Layouts
 import "Theme.js" as T
 
 Item {
+    property var vehicle: null
+
     ColumnLayout {
         anchors.fill: parent
         anchors.margins: 30
@@ -14,7 +16,9 @@ Item {
             Rectangle {
                 radius: 2; color: Qt.rgba(0.84, 0, 0.42, 0.12)
                 implicitWidth: tag.implicitWidth + 18; implicitHeight: tag.implicitHeight + 10
-                Text { id: tag; anchors.centerIn: parent; text: "In ascolto"; font.family: T.serif; font.pixelSize: 14; color: T.accent2_700 }
+                Text { id: tag; anchors.centerIn: parent
+                    text: (vehicle && vehicle.agentListening) ? "In ascolto" : "In pausa"
+                    font.family: T.serif; font.pixelSize: 14; color: T.accent2_700 }
             }
             Item { Layout.fillWidth: true }
             Text { text: "A bordo · funziona offline"; font.family: T.serif; font.pixelSize: 15; color: T.n600 }
@@ -31,7 +35,9 @@ Item {
                 spacing: 18
                 Text { text: "Tu — «Trova un caricatore vicino allo studio e sposta le 10:30.»"; font.family: T.serif; font.pixelSize: 18; color: T.n700; wrapMode: Text.WordWrap; Layout.fillWidth: true }
                 Text {
-                    text: "Due colonnine da 150 kW su Via Tortona, entrambe libere. Ho tenuto la più vicina per venti minuti e chiesto a Paolo di spostare la chiamata alle undici."
+                    text: (vehicle && vehicle.agentMessage)
+                          ? vehicle.agentMessage
+                          : "Due colonnine da 150 kW su Via Tortona, entrambe libere. Ho tenuto la più vicina per venti minuti e chiesto a Paolo di spostare la chiamata alle undici."
                     font.family: T.serif; font.pixelSize: 26; color: T.text; wrapMode: Text.WordWrap; Layout.fillWidth: true; lineHeight: 1.25
                 }
                 RowLayout {

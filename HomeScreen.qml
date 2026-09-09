@@ -116,7 +116,9 @@ Item {
             Icon { name: "sparkle"; size: 24; color: T.accent2_700 }
             Text {
                 Layout.fillWidth: true
-                text: "Agent — Il tuo appuntamento delle 10:30 è stato spostato alle 10:00. Parti fra sei minuti?"
+                text: "Agent — " + (vehicle && vehicle.agentMessage
+                        ? vehicle.agentMessage
+                        : "Il tuo appuntamento delle 10:30 è stato spostato alle 10:00. Parti fra sei minuti?")
                 font.family: T.serif; font.pixelSize: 18; color: T.text; wrapMode: Text.WordWrap
             }
             PrimaryButton { text: "Apri"; primary: false }

@@ -54,7 +54,7 @@ Window {
                     HomeScreen { vehicle: vehicle }
                     NavScreen {}
                     MediaScreen { vehicle: vehicle }
-                    AgentScreen {}
+                    AgentScreen { vehicle: vehicle }
                     ConnectScreen { vehicle: vehicle }
                     ClimateScreen {}
                     ClusterScreen { vehicle: vehicle }

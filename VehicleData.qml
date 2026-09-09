@@ -24,6 +24,10 @@ Item {
     property string mediaTitle: "—"
     property string mediaArtist: ""
 
+    // Agent (proattività + voce).
+    property bool agentListening: false
+    property string agentMessage: ""
+
     function _pick(v, d) { return (v === undefined || v === null) ? d : v; }
 
     function refresh() {
@@ -46,6 +50,9 @@ Item {
                     var m = d.media || {};
                     root.mediaTitle = root._pick(m.title, root.mediaTitle);
                     root.mediaArtist = root._pick(m.artist, root.mediaArtist);
+                    var a = d.agent || {};
+                    root.agentListening = root._pick(a.listening, false);
+                    root.agentMessage = root._pick(a.message, root.agentMessage);
                 } catch (e) {
                     root.online = false;
                 }
