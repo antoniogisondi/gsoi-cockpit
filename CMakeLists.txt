@@ -24,6 +24,10 @@ qt_add_qml_module(gsoi-cockpit
         Icon.qml
         IconButton.qml
         VehicleData.qml
+        ReverseData.qml
+        CameraView.qml
+        ParkingSensors.qml
+        RearViewScreen.qml
         NavRail.qml
         Header.qml
         SectionLabel.qml

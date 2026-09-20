@@ -65,5 +65,36 @@ Window {
         }
     }
 
+    // --- RETROCAMERA + SENSORI DI PARCHEGGIO --------------------------------
+    // Funzione di sicurezza INDIPENDENTE dall'AI (niente Jarvis Mini/LLM).
+    // Appena si innesta la retromarcia compare a tutto schermo, sopra al
+    // cockpit, come la Media Nav di serie. In auto il segnale arriva dal filo
+    // luce-retromarcia (GPIO); qui, mock, si commuta col tasto 'R' per il test.
+    ReverseData { id: reverse }
+
+    Loader {
+        anchors.fill: parent
+        z: 1000
+        active: reverse.reverse
+        visible: active
+        sourceComponent: Component {
+            Item {
+                anchors.fill: parent
+                Rectangle { anchors.fill: parent; color: "#000000" }
+                RearViewScreen {
+                    width: 1280
+                    height: 720
+                    anchors.centerIn: parent
+                    scale: Math.min(parent.width / 1280, parent.height / 720)
+                    transformOrigin: Item.Center
+                    reverseData: reverse
+                }
+            }
+        }
+    }
+
+    // Trigger di TEST (mock, in QEMU): 'R' innesta/toglie la retromarcia.
+    Shortcut { sequence: "R"; onActivated: reverse.reverse = !reverse.reverse }
+
     Shortcut { sequence: "Esc"; onActivated: Qt.quit() }
 }
