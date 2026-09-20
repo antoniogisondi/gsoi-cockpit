@@ -94,7 +94,8 @@ Window {
     }
 
     // Trigger di TEST (mock, in QEMU): 'R' innesta/toglie la retromarcia.
-    Shortcut { sequence: "R"; onActivated: reverse.reverse = !reverse.reverse }
+    // In auto comanda il GPIO (via servizio gsoi-reverse); qui è solo il mock.
+    Shortcut { sequence: "R"; onActivated: reverse.keyReverse = !reverse.keyReverse }
 
     Shortcut { sequence: "Esc"; onActivated: Qt.quit() }
 }
