@@ -59,7 +59,12 @@ Item {
                    icon: "bluetooth"; title: "Bluetooth"; subtitle: "Pixel 8 Pro"; onClicked: root.openScreen("phone") }
             Tile { Layout.fillWidth: true; Layout.preferredHeight: 92
                    icon: "ai"; title: "AI Assistant"
-                   subtitle: (!root.vehicle || root.vehicle.jarvisOnline) ? "Ready" : "Offline"
+                   subtitle: {
+                       if (root.vehicle && root.vehicle.convState === "listening") return "Listening…";
+                       if (root.vehicle && root.vehicle.convState === "thinking")  return "Thinking…";
+                       if (root.vehicle && root.vehicle.convState === "speaking")  return "Speaking…";
+                       return (!root.vehicle || root.vehicle.jarvisOnline) ? "Ready" : "Offline";
+                   }
                    onClicked: root.openScreen("agent") }
         }
     }

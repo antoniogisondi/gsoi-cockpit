@@ -63,19 +63,34 @@ Item {
             }
         }
 
+        // Titolo: a riposo è ESATTAMENTE quello del mockup; durante un dialogo
+        // riflette con discrezione la fase dell'assistente.
         Text {
             Layout.alignment: Qt.AlignHCenter
-            text: "How can I help you today?"
+            text: {
+                if (root.vehicle && root.vehicle.convState === "listening") return "I’m listening…";
+                if (root.vehicle && root.vehicle.convState === "thinking")  return "Thinking…";
+                return "How can I help you today?";
+            }
             font.family: T.sans; font.pixelSize: 30; font.weight: Font.Medium; color: T.text
         }
 
-        // Messaggio LIVE dell'agente di bordo — appare SOLO con un suggerimento
-        // proattivo reale (nello stato normale la schermata resta come il mockup).
+        // Riga messaggio LIVE — appare SOLO quando c'è qualcosa di reale da dire:
+        // la risposta dell'assistente durante un dialogo, oppure (a riposo) un
+        // suggerimento proattivo. Senza nulla di attivo la schermata resta
+        // identica al mockup.
         Text {
             Layout.alignment: Qt.AlignHCenter
             Layout.maximumWidth: parent.width
-            visible: root.vehicle && root.vehicle.agentSuggestions && root.vehicle.agentSuggestions.length > 0
-            text: root.vehicle ? root.vehicle.agentMessage : ""
+            visible: text.length > 0
+            text: {
+                if (!root.vehicle) return "";
+                if (root.vehicle.convActive && root.vehicle.convReply.length > 0)
+                    return root.vehicle.convReply;
+                if (root.vehicle.agentSuggestions && root.vehicle.agentSuggestions.length > 0)
+                    return root.vehicle.agentMessage;
+                return "";
+            }
             font.family: T.sans; font.pixelSize: 16; color: T.accent
             horizontalAlignment: Text.AlignHCenter; wrapMode: Text.WordWrap
         }
@@ -106,7 +121,9 @@ Item {
                                elide: Text.ElideRight }
                     }
                     MouseArea { id: ma; anchors.fill: parent; hoverEnabled: true
-                                cursorShape: Qt.PointingHandCursor }
+                                cursorShape: Qt.PointingHandCursor
+                                // Toccare un chip "parla" con l'assistente (ponte /ask).
+                                onClicked: if (root.vehicle) root.vehicle.ask(modelData[1]) }
                 }
             }
         }

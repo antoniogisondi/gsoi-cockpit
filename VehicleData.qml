@@ -22,6 +22,13 @@ Item {
     property string agentMessage: ""
     property var agentSuggestions: []
 
+    // --- Assistente vocale: dialogo dal vivo (agent.conversation) ---
+    // convState: idle | listening | thinking | speaking
+    property string convState: "idle"
+    property bool convActive: false           // c'è un dialogo in corso
+    property string convUser: ""              // ultima frase dell'utente
+    property string convReply: ""             // ultima risposta di Jarvis
+
     // --- Telemetria (gsoi-vehicled, CAN) ---
     property bool canOnline: false
     property int speedKmh: 0
@@ -66,6 +73,11 @@ Item {
             root.agentListening = root._pick(a.listening, false);
             root.agentMessage = root._pick(a.message, root.agentMessage);
             root.agentSuggestions = root._pick(a.suggestions, []);
+            var cv = a.conversation || {};
+            root.convState = root._pick(cv.state, "idle");
+            root.convActive = root.convState !== "idle";
+            root.convUser = root._pick(cv.you, "");
+            root.convReply = root._pick(cv.reply, "");
             var v = d.vehicle || {};
             root.speed = root._pick(v.speed, root.speed);
             root.engineTemp = root._pick(v.engine_temp, root.engineTemp);
@@ -85,6 +97,33 @@ Item {
             root.outsideC = root._pick(d.outside_c, root.outsideC);
             root.gear = root._pick(d.gear, "");
         });
+    }
+
+    // Invia una battuta all'assistente (ponte a testo POST /ask). È così che il
+    // cockpit "parla" con Jarvis: i chip e la barra di input della schermata AI
+    // chiamano questo metodo. La risposta compare in convReply al prossimo
+    // refresh dello stato (qui anticipato per reattività).
+    function ask(text) {
+        if (!text || text.length === 0) return;
+        root.convState = "thinking";
+        root.convActive = true;
+        root.convUser = text;
+        var xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState !== XMLHttpRequest.DONE) return;
+            if (xhr.status === 200) {
+                try {
+                    var r = JSON.parse(xhr.responseText);
+                    if (r && r.reply) root.convReply = r.reply;
+                } catch (e) {}
+            }
+            root.refreshState();   // allinea lo stato del dialogo dal servizio
+        };
+        try {
+            xhr.open("POST", root.stateUrl.replace("/state", "/ask"));
+            xhr.setRequestHeader("Content-Type", "application/json");
+            xhr.send(JSON.stringify({ text: text }));
+        } catch (e) {}
     }
 
     Timer { interval: 2000; running: true; repeat: true; triggeredOnStart: true; onTriggered: root.refreshState() }
