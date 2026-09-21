@@ -9,20 +9,35 @@ Pi 5, avviata al boot dopo lo splash. Il repo produce **due eseguibili**:
   al volante (app_id `org.gsoi.cluster`). Processo separato, indipendente
   dall'infotainment e dall'AI.
 
-> Toolkit nativo (niente web), touch-first, estetica editoriale automotive.
-> Responsive: disegnato a 1280×720 e **scalato uniformemente** a qualsiasi
-> risoluzione dello schermo.
+> Toolkit nativo (niente web), touch-first. **Tema scuro "glass"**: fondo
+> blu-notte, superfici in vetro traslucido, accento ciano, tipografia Barlow —
+> la stessa identità del quadro strumenti (`gsoi-cluster`).
 
-## Cosa contiene
+## Aspetto (design)
 
-- **Navigazione a sezioni** dalla barra laterale (NavRail): Home, Navigazione,
-  Media, Agente, Connessioni, Clima, Quadro, Telefono, Impostazioni.
-- **Header** con logo GSOI, stato rete e orologio.
-- **Dati live**: `VehicleData` legge lo stato da Jarvis Mini (server HTTP
-  locale `127.0.0.1:8090/state`) — velocità, giri, temperatura, batteria,
-  media, stato agente. Se Jarvis Mini non risponde, resta sugli ultimi valori.
-- **Icone Phosphor** (font imbarcato `Phosphor.ttf`) e font serif
-  **Source Serif 4** (nell'immagine via ricetta Yocto).
+Ricostruito sui mockup ufficiali di GSOI Automotive OS:
+
+- **Sidebar** (`Sidebar.qml`) con wordmark GSOI e le voci Home · Navigation ·
+  Media · Phone · AI · Settings; la voce attiva ha accento ciano e barretta.
+- **Status bar** (`StatusBar.qml`) in alto a destra: segnale, bluetooth,
+  temperatura, ora.
+- **Barra clima** (`ClimateBar.qml`) persistente in basso: temperatura −/+ con
+  slider blu→rosso e comandi HVAC (fan, sedili, sbrinamento, ricircolo).
+- **Home** (`HomeScreen.qml`): hero atmosferico "Good morning" (`HeroBackground.qml`),
+  4 **tile** rapide (`Tile.qml`) e 4 **card** informative (`InfoCard.qml`).
+- Font imbarcati (OFL): **Barlow** (UI, 3 pesi) + **Saira Condensed** (numeri) +
+  icone **Phosphor**.
+
+> Le schermate Navigation / Media / Phone / AI / Settings usano già il tema
+> scuro e vengono ridisegnate una per una sui rispettivi pannelli del mockup.
+
+## Dati live
+
+`VehicleData` legge lo stato da Jarvis Mini (server HTTP locale
+`127.0.0.1:8090/state`). Se Jarvis Mini non risponde, resta sugli ultimi valori.
+
+## Funzioni dedicate
+
 - **Retrocamera + sensori di parcheggio** (vedi sotto).
 - **Quadro strumenti digitale** su schermo dedicato (vedi sotto).
 

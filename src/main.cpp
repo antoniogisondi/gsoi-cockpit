@@ -13,7 +13,12 @@ int main(int argc, char *argv[])
     // in un processo separato (gsoi-cluster) con app_id org.gsoi.cluster.
     app.setDesktopFileName("org.gsoi.cockpit");
 
-    // Registra il font icone Phosphor (famiglia "Phosphor").
+    // Font imbarcati: Barlow (UI) in tre pesi + Saira Condensed (numeri) +
+    // icone Phosphor. Coerenti col quadro strumenti (gsoi-cluster).
+    QFontDatabase::addApplicationFont(":/qt/qml/GsoiCockpit/fonts/Barlow-Regular.ttf");
+    QFontDatabase::addApplicationFont(":/qt/qml/GsoiCockpit/fonts/Barlow-Medium.ttf");
+    QFontDatabase::addApplicationFont(":/qt/qml/GsoiCockpit/fonts/Barlow-SemiBold.ttf");
+    QFontDatabase::addApplicationFont(":/qt/qml/GsoiCockpit/fonts/SairaCondensed-SemiBold.ttf");
     QFontDatabase::addApplicationFont(":/qt/qml/GsoiCockpit/Phosphor.ttf");
 
     QQmlApplicationEngine engine;

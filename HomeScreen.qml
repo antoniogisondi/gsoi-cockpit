@@ -2,126 +2,176 @@ import QtQuick
 import QtQuick.Layouts
 import "Theme.js" as T
 
+// Home di GSOI Automotive OS (fedele al mockup): hero "Good morning" su sfondo
+// atmosferico, 4 tile rapide, riga di 4 card informative.
 Item {
+    id: root
     property var vehicle: null
+    signal openScreen(string screen)
 
     ColumnLayout {
         anchors.fill: parent
-        anchors.leftMargin: 30
-        anchors.rightMargin: 30
-        anchors.topMargin: 16
-        anchors.bottomMargin: 22
         spacing: 0
 
-        Text {
-            text: "Buongiorno, Ana."
-            font.family: T.serif
-            font.pixelSize: 46
-            font.weight: Font.DemiBold
-            color: T.text
-        }
-        Text {
-            Layout.fillWidth: true
-            Layout.maximumWidth: 780
-            Layout.topMargin: 4
-            Layout.bottomMargin: 22
-            text: "Carica all'84% durante la notte. Traffico scorrevole sulla A4 — arrivi in studio con nove minuti d'anticipo."
-            wrapMode: Text.WordWrap
-            font.family: T.serif
-            font.pixelSize: 18
-            color: T.n700
-        }
-
-        RowLayout {
+        // ---------------------------------------------------------------- HERO
+        Item {
             Layout.fillWidth: true
             Layout.fillHeight: true
-            spacing: 44
 
-            // --- Prossima meta ---
-            ColumnLayout {
-                Layout.fillWidth: true
-                Layout.fillHeight: true
-                spacing: 6
-                SectionLabel { text: "Prossima meta" }
+            HeroBackground { anchors.fill: parent }
+
+            // Testo di benvenuto
+            Column {
+                anchors.left: parent.left
+                anchors.top: parent.top
+                anchors.leftMargin: 44
+                anchors.topMargin: 40
+                spacing: 2
                 Text {
-                    text: "Studio Ventuno"
-                    font.family: T.serif; font.pixelSize: 30; font.weight: Font.DemiBold; color: T.text
+                    text: "Good morning,"
+                    font.family: T.sans; font.pixelSize: 46; font.weight: Font.DemiBold
+                    color: T.text
                 }
                 Text {
-                    text: "Via Tortona 21 · 14 min · 9.4 km"
-                    font.family: T.serif; font.pixelSize: 17; color: T.n700
+                    text: "Let’s drive the next chapter."
+                    font.family: T.sans; font.pixelSize: 34; font.weight: Font.Normal
+                    color: T.n800
                 }
-                PrimaryButton { text: "Avvia percorso"; Layout.topMargin: 10 }
-                Item { Layout.fillHeight: true }
+                Text {
+                    text: "Smarter journeys. A more human drive."
+                    font.family: T.sans; font.pixelSize: 18; color: T.n700
+                    topPadding: 8
+                }
             }
 
-            // --- In riproduzione ---
-            ColumnLayout {
-                Layout.fillWidth: true
-                Layout.fillHeight: true
-                spacing: 6
-                SectionLabel { text: "In riproduzione" }
-                RowLayout {
-                    spacing: 14
-                    Rectangle {
-                        width: 84; height: 84
-                        gradient: Gradient {
-                            GradientStop { position: 0.0; color: T.n400 }
-                            GradientStop { position: 1.0; color: T.n700 }
-                        }
-                    }
-                    ColumnLayout {
-                        spacing: 2
-                        Text { text: vehicle ? vehicle.mediaTitle : "—"; font.family: T.serif; font.pixelSize: 24; font.weight: Font.DemiBold; color: T.text }
-                        Text { text: vehicle ? vehicle.mediaArtist : ""; font.family: T.serif; font.pixelSize: 16; color: T.n700 }
-                        Text { text: "Bluetooth · iPhone di Ana"; font.family: T.serif; font.pixelSize: 14; color: T.n600; Layout.topMargin: 6 }
-                    }
-                }
-                Item { Layout.fillHeight: true }
-            }
+            // Tile rapide (in basso, sopra l'hero)
+            RowLayout {
+                anchors.left: parent.left
+                anchors.right: parent.right
+                anchors.bottom: parent.bottom
+                anchors.leftMargin: 44
+                anchors.rightMargin: 40
+                anchors.bottomMargin: 26
+                spacing: 18
 
-            // --- Veicolo ---
-            ColumnLayout {
-                Layout.fillWidth: true
-                Layout.fillHeight: true
-                spacing: 6
-                SectionLabel { text: "Veicolo" }
-                RowLayout {
-                    spacing: 8
-                    Text { text: (vehicle ? vehicle.chargePct : 84) + "%"; font.family: T.serif; font.pixelSize: 40; font.weight: Font.DemiBold; color: T.text }
-                    Text { text: (vehicle ? vehicle.rangeKm : 412) + " km"; font.family: T.serif; font.pixelSize: 17; color: T.n700; Layout.alignment: Qt.AlignBottom; Layout.bottomMargin: 8 }
+                Tile {
+                    Layout.fillWidth: true; Layout.preferredHeight: 92
+                    icon: "navigation-arrow"; title: "Navigation"; subtitle: "Munich"
+                    onClicked: root.openScreen("nav")
                 }
-                Rectangle {
-                    Layout.fillWidth: true
-                    Layout.maximumWidth: 240
-                    height: 8
-                    color: T.n300
-                    Layout.topMargin: 8
-                    Rectangle { width: parent.width * (vehicle ? vehicle.chargePct / 100 : 0.84); height: parent.height; color: T.accent }
+                Tile {
+                    Layout.fillWidth: true; Layout.preferredHeight: 92
+                    icon: "speaker-high"; title: "Radio"; subtitle: "87.5 MHz"
+                    onClicked: root.openScreen("media")
                 }
-                Text {
-                    text: "Gomme ok · Abitacolo 21°\nSoftware aggiornato"
-                    font.family: T.serif; font.pixelSize: 16; color: T.n700; Layout.topMargin: 12; lineHeight: 1.4
+                Tile {
+                    Layout.fillWidth: true; Layout.preferredHeight: 92
+                    icon: "bluetooth-connected"; title: "Bluetooth"; subtitle: "Pixel 8 Pro"
+                    onClicked: root.openScreen("phone")
                 }
-                Item { Layout.fillHeight: true }
+                Tile {
+                    Layout.fillWidth: true; Layout.preferredHeight: 92
+                    icon: "sparkle"; title: "AI Assistant"; subtitle: "Ready"
+                    onClicked: root.openScreen("agent")
+                }
             }
         }
 
-        // --- Striscia Agent ---
-        Rectangle { Layout.fillWidth: true; height: 1; color: T.divider; Layout.topMargin: 8 }
+        // ---------------------------------------------------- CARD INFORMATIVE
         RowLayout {
             Layout.fillWidth: true
-            Layout.topMargin: 14
-            spacing: 14
-            Icon { name: "sparkle"; size: 24; color: T.accent2_700 }
-            Text {
-                Layout.fillWidth: true
-                text: "Agent — " + (vehicle && vehicle.agentMessage
-                        ? vehicle.agentMessage
-                        : "Il tuo appuntamento delle 10:30 è stato spostato alle 10:00. Parti fra sei minuti?")
-                font.family: T.serif; font.pixelSize: 18; color: T.text; wrapMode: Text.WordWrap
+            Layout.preferredHeight: 168
+            Layout.leftMargin: 44
+            Layout.rightMargin: 40
+            Layout.topMargin: 18
+            Layout.bottomMargin: 20
+            spacing: 18
+
+            // Meteo / posizione
+            InfoCard {
+                Layout.fillWidth: true; Layout.fillHeight: true
+                icon: "thermometer-simple"; label: "Munich"
+                RowLayout {
+                    anchors.fill: parent; spacing: 12
+                    Text {
+                        text: "24°"; font.family: T.num; font.pixelSize: 44
+                        font.weight: Font.DemiBold; color: T.text
+                        Layout.alignment: Qt.AlignVCenter
+                    }
+                    Text {
+                        text: "Clear skies"; font.family: T.sans; font.pixelSize: 15; color: T.n700
+                        Layout.alignment: Qt.AlignVCenter
+                    }
+                    Item { Layout.fillWidth: true }
+                }
             }
-            PrimaryButton { text: "Apri"; primary: false }
+
+            // Prossima meta
+            InfoCard {
+                Layout.fillWidth: true; Layout.fillHeight: true
+                icon: "navigation-arrow"; label: "Next destination"
+                ColumnLayout {
+                    anchors.fill: parent; spacing: 2
+                    Item { Layout.fillHeight: true }
+                    Text { text: "BMW Welt"; font.family: T.sans; font.pixelSize: 21
+                           font.weight: Font.DemiBold; color: T.text }
+                    Text { text: "Am Olympiapark 1, München"; font.family: T.sans
+                           font.pixelSize: 14; color: T.n600; Layout.fillWidth: true; elide: Text.ElideRight }
+                    Text { text: "28 min · 12 km"; font.family: T.sans; font.pixelSize: 15
+                           color: T.accent; topPadding: 4 }
+                    Item { Layout.fillHeight: true }
+                }
+            }
+
+            // Agenda
+            InfoCard {
+                Layout.fillWidth: true; Layout.fillHeight: true
+                icon: ""; label: "Today"
+                ColumnLayout {
+                    anchors.fill: parent; spacing: 2
+                    Item { Layout.fillHeight: true }
+                    Text { text: "Team Sync"; font.family: T.sans; font.pixelSize: 21
+                           font.weight: Font.DemiBold; color: T.text }
+                    Text { text: "11:00 – 11:30"; font.family: T.sans; font.pixelSize: 15; color: T.n700 }
+                    Text { text: "Microsoft Teams"; font.family: T.sans; font.pixelSize: 14
+                           color: T.n600; topPadding: 2 }
+                    Item { Layout.fillHeight: true }
+                }
+            }
+
+            // Pannello brand
+            Rectangle {
+                Layout.fillWidth: true; Layout.fillHeight: true
+                radius: 14
+                gradient: Gradient {
+                    orientation: Gradient.Horizontal
+                    GradientStop { position: 0.0; color: "#0e1420" }
+                    GradientStop { position: 1.0; color: "#0a1622" }
+                }
+                border.width: 1; border.color: T.glassBorder
+
+                ColumnLayout {
+                    anchors.right: parent.right
+                    anchors.verticalCenter: parent.verticalCenter
+                    anchors.rightMargin: 22
+                    spacing: 4
+                    Repeater {
+                        model: ["PEOPLE", "VEHICLES", "INTELLIGENCE", "TOGETHER"]
+                        delegate: Text {
+                            required property var modelData
+                            Layout.alignment: Qt.AlignRight
+                            text: modelData
+                            font.family: T.sans; font.pixelSize: 15; font.weight: Font.Medium
+                            font.letterSpacing: 3.5; color: T.n800
+                        }
+                    }
+                    Rectangle {
+                        Layout.alignment: Qt.AlignRight
+                        Layout.topMargin: 6
+                        width: 54; height: 2; radius: 1; color: T.accent
+                    }
+                }
+            }
         }
     }
 }

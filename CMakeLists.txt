@@ -31,6 +31,12 @@ qt_add_qml_module(gsoi-cockpit
         CameraView.qml
         ParkingSensors.qml
         RearViewScreen.qml
+        Sidebar.qml
+        StatusBar.qml
+        ClimateBar.qml
+        Tile.qml
+        InfoCard.qml
+        HeroBackground.qml
         NavRail.qml
         Header.qml
         SectionLabel.qml
@@ -46,6 +52,10 @@ qt_add_qml_module(gsoi-cockpit
         SettingsScreen.qml
     RESOURCES
         Phosphor.ttf
+        fonts/Barlow-Regular.ttf
+        fonts/Barlow-Medium.ttf
+        fonts/Barlow-SemiBold.ttf
+        fonts/SairaCondensed-SemiBold.ttf
 )
 
 target_link_libraries(gsoi-cockpit PRIVATE Qt6::Quick Qt6::Gui)

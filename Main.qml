@@ -3,6 +3,9 @@ import QtQuick.Window
 import QtQuick.Layouts
 import "Theme.js" as T
 
+// GSOI Automotive OS — shell del cockpit (schermo centrale).
+// Sidebar + status + barra clima persistenti; al centro le schermate.
+// Layout fluido: si adatta al pannello reale (baseline ~1280x720).
 Window {
     id: win
     visible: true
@@ -13,55 +16,59 @@ Window {
     title: "GSOI Automotive OS"
 
     property string screen: "home"
-    readonly property var order: ["home", "nav", "media", "agent", "conn",
-                                   "climate", "cluster", "phone", "settings"]
+    readonly property var order: ["home", "nav", "media", "phone", "agent", "settings"]
 
     // Dati live da Jarvis Mini (server HTTP locale).
     VehicleData { id: vehicle }
 
-    // --- Responsive: tutto disegnato a 1280x720 e scalato uniformemente. ---
-    Item {
-        id: canvas
-        width: 1280
-        height: 720
-        anchors.centerIn: parent
-        scale: Math.min(win.width / width, win.height / height)
-        transformOrigin: Item.Center
+    ColumnLayout {
+        anchors.fill: parent
+        spacing: 0
 
         RowLayout {
-            anchors.fill: parent
+            Layout.fillWidth: true
+            Layout.fillHeight: true
             spacing: 0
 
-            NavRail {
-                Layout.preferredWidth: 200
+            Sidebar {
+                Layout.preferredWidth: 210
                 Layout.fillHeight: true
                 current: win.screen
                 onSelect: (s) => win.screen = s
             }
 
-            ColumnLayout {
+            Item {
                 Layout.fillWidth: true
                 Layout.fillHeight: true
-                spacing: 0
-
-                Header { Layout.fillWidth: true; vehicle: vehicle }
+                clip: true
 
                 StackLayout {
-                    Layout.fillWidth: true
-                    Layout.fillHeight: true
+                    anchors.fill: parent
                     currentIndex: Math.max(0, win.order.indexOf(win.screen))
 
-                    HomeScreen { vehicle: vehicle }
+                    HomeScreen { vehicle: vehicle; onOpenScreen: (s) => win.screen = s }
                     NavScreen {}
                     MediaScreen { vehicle: vehicle }
-                    AgentScreen { vehicle: vehicle }
-                    ConnectScreen { vehicle: vehicle }
-                    ClimateScreen {}
-                    ClusterScreen { vehicle: vehicle }
                     PhoneScreen {}
+                    AgentScreen { vehicle: vehicle }
                     SettingsScreen {}
                 }
+
+                // Status cluster sempre in alto a destra.
+                StatusBar {
+                    anchors.right: parent.right
+                    anchors.top: parent.top
+                    anchors.rightMargin: 30
+                    anchors.topMargin: 22
+                    z: 10
+                    vehicle: vehicle
+                }
             }
+        }
+
+        ClimateBar {
+            Layout.fillWidth: true
+            Layout.preferredHeight: 92
         }
     }
 
@@ -94,8 +101,6 @@ Window {
     }
 
     // Trigger di TEST (mock, in QEMU): 'R' innesta/toglie la retromarcia.
-    // In auto comanda il GPIO (via servizio gsoi-reverse); qui è solo il mock.
     Shortcut { sequence: "R"; onActivated: reverse.keyReverse = !reverse.keyReverse }
-
     Shortcut { sequence: "Esc"; onActivated: Qt.quit() }
 }

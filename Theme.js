@@ -1,27 +1,52 @@
 .pragma library
 
-// Token di design del cockpit GSOI (stile editoriale/stampa).
-// Colori come stringhe: QML li converte automaticamente in color.
+// GSOI Automotive OS — sistema di design (tema SCURO "glass").
+// Ricostruito sui mockup ufficiali: fondo blu-notte, superfici in vetro
+// traslucido, accento ciano, tipografia Barlow. I nomi storici dei token sono
+// mantenuti (rimappati su valori scuri) così le schermate non ancora ridisegnate
+// restano leggibili durante la transizione.
 
-var bg        = "#f3f2f2";
-var surface   = "#eae9e9";
-var text       = "#201e1d";
-var divider    = "#cdcac7";
+// --- Fondali -----------------------------------------------------------------
+var bg       = "#070b12";   // fondo generale (blu-notte)
+var bgDeep   = "#04070c";   // più profondo (sidebar / gradienti)
+var surface  = "#0e141d";   // superficie piena
 
-var accent     = "#0088b0";
-var accent700  = "#006786";
-var accent2    = "#d6006c";
-var accent2_700 = "#aa0b56";
-var yellow     = "#edbb00";
+// Vetro (superfici traslucide sopra il fondo/hero). Formato #AARRGGBB.
+var glass       = "#0affffff";   // ~4% bianco
+var glassHi     = "#16ffffff";   // ~9% (hover / attivo)
+var glassBorder = "#1fffffff";   // ~12% bordo hairline
+var hairline    = "#14ffffff";   // separatori
 
-var n200 = "#eae7e7";
-var n300 = "#d7d3d3";
-var n400 = "#bab6b6";
-var n500 = "#9b9797";
-var n600 = "#7d7979";
-var n700 = "#605d5d";
-var n800 = "#444141";
+// --- Testo -------------------------------------------------------------------
+var text    = "#eaf0f7";
+var divider = "#1b2431";
 
-// Font serif del progetto (imbarcato nell'immagine via ricetta Yocto;
-// su desktop richiede il pacchetto Source Serif 4, altrimenti fallback serif).
-var serif = "Source Serif 4";
+// --- Accenti -----------------------------------------------------------------
+var accent      = "#33b7e8";   // ciano GSOI (attivo, sottotitoli, link)
+var accent700   = "#5cccf2";   // ciano chiaro (testo accento su scuro)
+var accentDeep  = "#1f7fb0";
+var accent2     = "#ff5c9d";   // magenta (usato di rado)
+var accent2_700 = "#ff86b7";
+var yellow      = "#f4b524";
+var green       = "#37e08a";
+var red         = "#ff5648";
+
+// --- Rampa neutra (invertita per il tema scuro) ------------------------------
+// numeri bassi = superfici/bordi scuri, numeri alti = testo chiaro.
+var n200 = "#10161f";
+var n300 = "#182029";   // track / stato premuto
+var n400 = "#26303c";
+var n500 = "#5b6675";
+var n600 = "#8593a4";   // testo attenuato
+var n700 = "#a6b3c2";   // testo secondario
+var n800 = "#cdd8e4";   // testo quasi pieno
+
+// --- Tipografia (font imbarcati, vedi src/main.cpp) --------------------------
+// "serif" è mantenuto come nome storico ma punta a Barlow (le vecchie schermate
+// lo usano ovunque). Per il testo nuovo usare i nomi espliciti.
+var serif = "Barlow";           // compat: era Source Serif 4
+var sans  = "Barlow";           // UI generale
+var num   = "Saira Condensed";  // numeri / dati
+
+// Spaziatura lettere per le etichette maiuscole larghe dei mockup.
+var trackWide = 3.0;
