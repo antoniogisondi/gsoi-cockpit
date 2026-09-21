@@ -19,10 +19,14 @@ Image {
         "gauge": "clock", "warning": "info", "microphone": "ai"
     })
 
+    // In un Layout la dimensione la dà l'implicit: fissiamola a `size`
+    // (altrimenti Image userebbe sourceSize come implicit → icone giganti).
+    implicitWidth: size
+    implicitHeight: size
     width: size
     height: size
     source: name === "" ? "" : "images/icons/" + (_map[name] !== undefined ? _map[name] : name) + ".svg"
-    sourceSize: Qt.size(96, 96)
+    sourceSize: Qt.size(64, 64)     // risoluzione di rasterizzazione dell'SVG
     fillMode: Image.PreserveAspectFit
     smooth: true
     mipmap: true

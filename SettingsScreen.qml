@@ -72,7 +72,7 @@ Item {
             clip: true
             border.width: 1; border.color: T.glassBorder
 
-            HeroBackground { anchors.fill: parent }
+            HeroBackground { anchors.fill: parent; source: Qt.resolvedUrl("images/hero.png") }
 
             ColumnLayout {
                 anchors.right: parent.right

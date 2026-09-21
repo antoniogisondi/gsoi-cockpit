@@ -20,7 +20,7 @@ Item {
 
         HeroBackground {
             anchors.fill: parent
-            source: root.heroSource !== "" ? root.heroSource : Qt.resolvedUrl("images/hero.png")
+            source: root.heroSource != "" ? root.heroSource : Qt.resolvedUrl("images/hero.png")
         }
 
         Column {

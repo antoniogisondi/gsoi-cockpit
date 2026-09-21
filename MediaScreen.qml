@@ -54,7 +54,8 @@ Item {
 
             // ------------------------------------------------ NOW PLAYING
             ColumnLayout {
-                Layout.preferredWidth: 300
+                Layout.preferredWidth: 320
+                Layout.maximumWidth: 360
                 Layout.fillHeight: true
                 spacing: 16
 
