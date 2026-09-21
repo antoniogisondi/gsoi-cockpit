@@ -8,6 +8,11 @@ int main(int argc, char *argv[])
     app.setApplicationName("GSOI Cockpit");
     app.setOrganizationName("GSOI");
 
+    // app_id Wayland: Weston (kiosk-shell) lo usa per piazzare il cockpit sullo
+    // schermo centrale (vedi weston.ini in meta-gsoi). Il quadro strumenti gira
+    // in un processo separato (gsoi-cluster) con app_id org.gsoi.cluster.
+    app.setDesktopFileName("org.gsoi.cockpit");
+
     // Registra il font icone Phosphor (famiglia "Phosphor").
     QFontDatabase::addApplicationFont(":/qt/qml/GsoiCockpit/Phosphor.ttf");
 
