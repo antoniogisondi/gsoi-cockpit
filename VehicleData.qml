@@ -1,78 +1,92 @@
 import QtQuick
 
-// Legge lo stato da Jarvis Mini (server HTTP locale) e lo espone come
-// proprieta' bindabili. Se Jarvis Mini non e' raggiungibile, `online`
-// resta false e i valori mantengono gli ultimi noti / default.
+// Sorgente dati LIVE del cockpit. Legge da DUE servizi locali:
+//   • jarvis-mini   127.0.0.1:8090/state    → modalità rete, media, agente
+//   • gsoi-vehicled 127.0.0.1:8093/vehicle  → telemetria reale (CAN sola lettura)
+// Espone tutto come proprietà bindabili. Se un servizio non risponde, i valori
+// restano agli ultimi noti e i flag *Online vanno a false.
 Item {
     id: root
     visible: false
 
-    property string endpoint: "http://127.0.0.1:8090/state"
-    property int pollMs: 2000
+    property string stateUrl:   "http://127.0.0.1:8090/state"
+    property string vehicleUrl: "http://127.0.0.1:8093/vehicle"
 
-    property bool online: false
-    property string mode: "offline"          // "offline" | "connected"
-
-    // Telemetria (EV + ICE generici).
-    property int speed: 0
-    property int rpm: 0
-    property int engineTemp: 0
-    property real battery: 0
-    property int chargePct: 84
-    property int rangeKm: 412
-
-    property string mediaTitle: "—"
+    // --- Rete / agente (jarvis-mini) ---
+    property bool jarvisOnline: false
+    property bool online: false               // rete presente (mode connected)
+    property string mode: "offline"
+    property string mediaTitle: ""
     property string mediaArtist: ""
-
-    // Agent (proattività + voce).
     property bool agentListening: false
     property string agentMessage: ""
+    property var agentSuggestions: []
+
+    // --- Telemetria (gsoi-vehicled, CAN) ---
+    property bool canOnline: false
+    property int speedKmh: 0
+    property int rpm: 0
+    property int coolantC: 0
+    property int fuelPct: 0
+    property int outsideC: 0
+    property string gear: ""
+
+    // --- Compat (nomi storici) ---
+    property int speed: 0
+    property int engineTemp: 0
+    property int rangeKm: 412
+    property int chargePct: 84
 
     function _pick(v, d) { return (v === undefined || v === null) ? d : v; }
 
-    function refresh() {
+    function _get(url, cb) {
         var xhr = new XMLHttpRequest();
         xhr.onreadystatechange = function () {
-            if (xhr.readyState !== XMLHttpRequest.DONE)
-                return;
+            if (xhr.readyState !== XMLHttpRequest.DONE) return;
             if (xhr.status === 200) {
-                try {
-                    var d = JSON.parse(xhr.responseText);
-                    root.online = true;
-                    root.mode = root._pick(d.mode, "offline");
-                    var v = d.vehicle || {};
-                    root.speed = root._pick(v.speed, root.speed);
-                    root.rpm = root._pick(v.rpm, root.rpm);
-                    root.engineTemp = root._pick(v.engine_temp, root.engineTemp);
-                    root.battery = root._pick(v.battery_v, root.battery);
-                    root.chargePct = root._pick(v.charge_pct, root.chargePct);
-                    root.rangeKm = root._pick(v.range_km, root.rangeKm);
-                    var m = d.media || {};
-                    root.mediaTitle = root._pick(m.title, root.mediaTitle);
-                    root.mediaArtist = root._pick(m.artist, root.mediaArtist);
-                    var a = d.agent || {};
-                    root.agentListening = root._pick(a.listening, false);
-                    root.agentMessage = root._pick(a.message, root.agentMessage);
-                } catch (e) {
-                    root.online = false;
-                }
-            } else {
-                root.online = false;
-            }
+                try { cb(JSON.parse(xhr.responseText), true); }
+                catch (e) { cb(null, false); }
+            } else { cb(null, false); }
         };
-        try {
-            xhr.open("GET", root.endpoint);
-            xhr.send();
-        } catch (e) {
-            root.online = false;
-        }
+        try { xhr.open("GET", url); xhr.send(); }
+        catch (e) { cb(null, false); }
     }
 
-    Timer {
-        interval: root.pollMs
-        running: true
-        repeat: true
-        triggeredOnStart: true
-        onTriggered: root.refresh()
+    function refreshState() {
+        _get(root.stateUrl, function (d, ok) {
+            root.jarvisOnline = ok;
+            if (!ok) return;
+            root.mode = root._pick(d.mode, "offline");
+            var c = d.connection || {};
+            root.online = root._pick(c.online, root.mode === "connected");
+            var m = d.media || {};
+            root.mediaTitle = root._pick(m.title, root.mediaTitle);
+            root.mediaArtist = root._pick(m.artist, root.mediaArtist);
+            var a = d.agent || {};
+            root.agentListening = root._pick(a.listening, false);
+            root.agentMessage = root._pick(a.message, root.agentMessage);
+            root.agentSuggestions = root._pick(a.suggestions, []);
+            var v = d.vehicle || {};
+            root.speed = root._pick(v.speed, root.speed);
+            root.engineTemp = root._pick(v.engine_temp, root.engineTemp);
+            root.rangeKm = root._pick(v.range_km, root.rangeKm);
+            root.chargePct = root._pick(v.charge_pct, root.chargePct);
+        });
     }
+
+    function refreshVehicle() {
+        _get(root.vehicleUrl, function (d, ok) {
+            root.canOnline = ok && root._pick(d ? d.online : false, false);
+            if (!ok || !d) return;
+            root.speedKmh = root._pick(d.speed_kmh, 0);
+            root.rpm = root._pick(d.rpm, 0);
+            root.coolantC = root._pick(d.coolant_c, 0);
+            root.fuelPct = root._pick(d.fuel_pct, 0);
+            root.outsideC = root._pick(d.outside_c, root.outsideC);
+            root.gear = root._pick(d.gear, "");
+        });
+    }
+
+    Timer { interval: 2000; running: true; repeat: true; triggeredOnStart: true; onTriggered: root.refreshState() }
+    Timer { interval: 1200; running: true; repeat: true; triggeredOnStart: true; onTriggered: root.refreshVehicle() }
 }

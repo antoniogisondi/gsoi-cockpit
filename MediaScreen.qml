@@ -74,10 +74,11 @@ Item {
                     }
                     ColumnLayout {
                         spacing: 3
-                        Text { text: "Bayern 3"; font.family: T.sans; font.pixelSize: 26
+                        Text { text: (root.vehicle && root.vehicle.mediaTitle) ? root.vehicle.mediaTitle : "Bayern 3"
+                               font.family: T.sans; font.pixelSize: 26
                                font.weight: Font.DemiBold; color: T.text }
-                        Text { text: "Good Music. Good Mood."; font.family: T.sans
-                               font.pixelSize: 15; color: T.n700 }
+                        Text { text: (root.vehicle && root.vehicle.mediaArtist) ? root.vehicle.mediaArtist : "Good Music. Good Mood."
+                               font.family: T.sans; font.pixelSize: 15; color: T.n700 }
                         RowLayout {
                             spacing: 10
                             Layout.topMargin: 4

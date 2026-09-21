@@ -8,6 +8,18 @@ Item {
     id: root
     property var vehicle: null
 
+    // Chip: i suggerimenti proattivi REALI dell'agente (se presenti),
+    // altrimenti gli spunti predefiniti.
+    readonly property var defaultChips: [
+        ["search", "Find a charging station nearby"],
+        ["media",  "Play some relaxing music"],
+        ["cloud",  "What’s the weather at my destination?"],
+        ["news",   "Give me a summary of today’s news"]
+    ]
+    readonly property var chips: (vehicle && vehicle.agentSuggestions && vehicle.agentSuggestions.length > 0)
+        ? vehicle.agentSuggestions.map(function (s) { return ["ai", s.text]; })
+        : defaultChips
+
     // Colonna centrale
     ColumnLayout {
         anchors.horizontalCenter: parent.horizontalCenter
@@ -57,6 +69,17 @@ Item {
             font.family: T.sans; font.pixelSize: 30; font.weight: Font.Medium; color: T.text
         }
 
+        // Messaggio LIVE dell'agente di bordo — appare SOLO con un suggerimento
+        // proattivo reale (nello stato normale la schermata resta come il mockup).
+        Text {
+            Layout.alignment: Qt.AlignHCenter
+            Layout.maximumWidth: parent.width
+            visible: root.vehicle && root.vehicle.agentSuggestions && root.vehicle.agentSuggestions.length > 0
+            text: root.vehicle ? root.vehicle.agentMessage : ""
+            font.family: T.sans; font.pixelSize: 16; color: T.accent
+            horizontalAlignment: Text.AlignHCenter; wrapMode: Text.WordWrap
+        }
+
         // --- Chip suggeriti (2x2) ---
         GridLayout {
             Layout.alignment: Qt.AlignHCenter
@@ -64,12 +87,7 @@ Item {
             columns: 2
             rowSpacing: 14; columnSpacing: 14
             Repeater {
-                model: [
-                    ["search", "Find a charging station nearby"],
-                    ["media",  "Play some relaxing music"],
-                    ["cloud",  "What’s the weather at my destination?"],
-                    ["news",   "Give me a summary of today’s news"]
-                ]
+                model: root.chips
                 delegate: Rectangle {
                     required property var modelData
                     Layout.fillWidth: true

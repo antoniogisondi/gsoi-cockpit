@@ -7,7 +7,8 @@ import "Theme.js" as T
 Item {
     id: root
     property var vehicle: null
-    property string outsideTemp: "24°C"
+    // Temperatura esterna dal vivo (gsoi-vehicled); 24°C finché non c'è il dato.
+    property string outsideTemp: (vehicle && vehicle.canOnline) ? (vehicle.outsideC + "°C") : "24°C"
 
     property string clock: Qt.formatTime(new Date(), "hh:mm")
     Timer {

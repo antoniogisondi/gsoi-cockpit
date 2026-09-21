@@ -58,7 +58,9 @@ Item {
             Tile { Layout.fillWidth: true; Layout.preferredHeight: 92
                    icon: "bluetooth"; title: "Bluetooth"; subtitle: "Pixel 8 Pro"; onClicked: root.openScreen("phone") }
             Tile { Layout.fillWidth: true; Layout.preferredHeight: 92
-                   icon: "ai"; title: "AI Assistant"; subtitle: "Ready"; onClicked: root.openScreen("agent") }
+                   icon: "ai"; title: "AI Assistant"
+                   subtitle: (!root.vehicle || root.vehicle.jarvisOnline) ? "Ready" : "Offline"
+                   onClicked: root.openScreen("agent") }
         }
     }
 
@@ -99,8 +101,11 @@ Item {
                 RowLayout {
                     spacing: 10
                     Icon { name: "sun"; size: 34; Layout.alignment: Qt.AlignVCenter }
-                    Text { text: "24°C"; font.family: T.num; font.pixelSize: 38
-                           font.weight: Font.DemiBold; color: T.text; Layout.alignment: Qt.AlignVCenter }
+                    Text {
+                        text: (root.vehicle && root.vehicle.canOnline) ? (root.vehicle.outsideC + "°C") : "24°C"
+                        font.family: T.num; font.pixelSize: 38
+                        font.weight: Font.DemiBold; color: T.text; Layout.alignment: Qt.AlignVCenter
+                    }
                 }
                 Text { text: "Clear skies"; font.family: T.sans; font.pixelSize: 15; color: T.n800 }
             }
