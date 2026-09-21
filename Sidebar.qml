@@ -42,7 +42,7 @@ Rectangle {
         }
         Text {
             text: "DRIVEN BY INTELLIGENCE"
-            font.family: T.sans; font.pixelSize: 8.5; font.letterSpacing: 2.2
+            font.family: T.sans; font.pixelSize: 9; font.letterSpacing: 2.2
             color: T.accent; Layout.topMargin: 4; Layout.bottomMargin: 26
         }
 

@@ -35,7 +35,6 @@ qt_add_qml_module(gsoi-cockpit
         StatusBar.qml
         ClimateBar.qml
         Tile.qml
-        InfoCard.qml
         HeroBackground.qml
         NavRail.qml
         Header.qml
