@@ -2,86 +2,109 @@ import QtQuick
 import QtQuick.Layouts
 import "Theme.js" as T
 
+// AI (fedele al mockup): orb luminoso al centro, "How can I help you today?",
+// 4 chip di suggerimento, e a destra la frase d'accompagnamento.
 Item {
+    id: root
     property var vehicle: null
 
+    // Colonna centrale
     ColumnLayout {
-        anchors.fill: parent
-        anchors.margins: 30
-        spacing: 16
+        anchors.horizontalCenter: parent.horizontalCenter
+        anchors.verticalCenter: parent.verticalCenter
+        anchors.horizontalCenterOffset: -60
+        width: Math.min(660, parent.width - 320)
+        spacing: 22
 
-        RowLayout {
-            spacing: 14
-            SectionLabel { text: "Car Agent"; color: T.accent2_700 }
-            Rectangle {
-                radius: 2; color: Qt.rgba(0.84, 0, 0.42, 0.12)
-                implicitWidth: tag.implicitWidth + 18; implicitHeight: tag.implicitHeight + 10
-                Text { id: tag; anchors.centerIn: parent
-                    text: (vehicle && vehicle.agentListening) ? "In ascolto" : "In pausa"
-                    font.family: T.serif; font.pixelSize: 14; color: T.accent2_700 }
+        // --- Orb ---
+        Item {
+            id: orb
+            Layout.alignment: Qt.AlignHCenter
+            width: 150; height: 150
+            SequentialAnimation on scale {
+                loops: Animation.Infinite
+                NumberAnimation { from: 0.97; to: 1.05; duration: 2200; easing.type: Easing.InOutSine }
+                NumberAnimation { from: 1.05; to: 0.97; duration: 2200; easing.type: Easing.InOutSine }
             }
-            Item { Layout.fillWidth: true }
-            Text { text: "A bordo · funziona offline"; font.family: T.serif; font.pixelSize: 15; color: T.n600 }
+            Canvas {
+                anchors.fill: parent
+                onPaint: {
+                    var c = getContext("2d"); c.reset();
+                    var W = width, H = height, cx = W / 2, cy = H / 2, R = W / 2 - 12;
+                    var glow = c.createRadialGradient(cx, cy, R * 0.3, cx, cy, R * 1.7);
+                    glow.addColorStop(0, "rgba(60,150,255,0.30)");
+                    glow.addColorStop(1, "rgba(0,0,0,0)");
+                    c.fillStyle = glow; c.fillRect(0, 0, W, H);
+                    var body = c.createRadialGradient(cx, cy - R * 0.35, R * 0.2, cx, cy, R);
+                    body.addColorStop(0, "#173352"); body.addColorStop(1, "#0a1626");
+                    c.fillStyle = body;
+                    c.beginPath(); c.arc(cx, cy, R, 0, Math.PI * 2); c.fill();
+                    c.save();
+                    c.strokeStyle = "#4aa8ff"; c.lineWidth = 2.5;
+                    c.shadowColor = "#4aa8ff"; c.shadowBlur = 20;
+                    c.beginPath(); c.arc(cx, cy, R, 0, Math.PI * 2); c.stroke();
+                    c.restore();
+                    // riflesso in alto
+                    c.strokeStyle = "rgba(255,255,255,0.55)"; c.lineWidth = 2;
+                    c.beginPath(); c.arc(cx, cy, R - 2, Math.PI * 1.15, Math.PI * 1.5); c.stroke();
+                }
+            }
         }
 
-        RowLayout {
-            Layout.fillWidth: true
-            Layout.fillHeight: true
-            spacing: 40
+        Text {
+            Layout.alignment: Qt.AlignHCenter
+            text: "How can I help you today?"
+            font.family: T.sans; font.pixelSize: 30; font.weight: Font.Medium; color: T.text
+        }
 
-            ColumnLayout {
-                Layout.fillWidth: true
-                Layout.fillHeight: true
-                spacing: 18
-                Text { text: "Tu — «Trova un caricatore vicino allo studio e sposta le 10:30.»"; font.family: T.serif; font.pixelSize: 18; color: T.n700; wrapMode: Text.WordWrap; Layout.fillWidth: true }
-                Text {
-                    text: (vehicle && vehicle.agentMessage)
-                          ? vehicle.agentMessage
-                          : "Due colonnine da 150 kW su Via Tortona, entrambe libere. Ho tenuto la più vicina per venti minuti e chiesto a Paolo di spostare la chiamata alle undici."
-                    font.family: T.serif; font.pixelSize: 26; color: T.text; wrapMode: Text.WordWrap; Layout.fillWidth: true; lineHeight: 1.25
-                }
-                RowLayout {
-                    spacing: 12
-                    PrimaryButton { text: "Naviga e prenota" }
-                    PrimaryButton { text: "Altra colonnina"; primary: false }
-                }
-                Item { Layout.fillHeight: true }
-                Rectangle { Layout.fillWidth: true; height: 1; color: T.divider }
-                RowLayout {
+        // --- Chip suggeriti (2x2) ---
+        GridLayout {
+            Layout.alignment: Qt.AlignHCenter
+            Layout.topMargin: 8
+            columns: 2
+            rowSpacing: 14; columnSpacing: 14
+            Repeater {
+                model: [
+                    ["lightning",          "Find a charging station nearby"],
+                    ["music-notes",        "Play some relaxing music"],
+                    ["thermometer-simple", "What’s the weather at my destination?"],
+                    ["sparkle",            "Give me a summary of today’s news"]
+                ]
+                delegate: Rectangle {
+                    required property var modelData
                     Layout.fillWidth: true
-                    Layout.topMargin: 8
-                    spacing: 14
-                    Text { text: "🎙"; font.pixelSize: 26; color: T.accent2_700 }
-                    // finta waveform
-                    Row {
-                        spacing: 4
-                        Repeater {
-                            model: 28
-                            delegate: Rectangle {
-                                required property int index
-                                width: 3
-                                height: 6 + Math.abs(Math.sin(index * 0.7)) * 26
-                                anchors.verticalCenter: parent.verticalCenter
-                                color: T.accent2
-                            }
-                        }
+                    Layout.preferredWidth: 315
+                    implicitHeight: 58
+                    radius: 12
+                    color: ma.pressed ? T.glassHi : T.glass
+                    border.width: 1; border.color: ma.containsMouse ? T.accent : T.glassBorder
+                    RowLayout {
+                        anchors.fill: parent
+                        anchors.leftMargin: 16; anchors.rightMargin: 16
+                        spacing: 13
+                        Icon { name: modelData[0]; size: 20; color: T.accent }
+                        Text { Layout.fillWidth: true; text: modelData[1]
+                               font.family: T.sans; font.pixelSize: 16; color: T.n800
+                               elide: Text.ElideRight }
                     }
-                    Item { Layout.fillWidth: true }
-                    Text { text: "oppure scrivi"; font.family: T.serif; font.pixelSize: 15; color: T.n600 }
+                    MouseArea { id: ma; anchors.fill: parent; hoverEnabled: true
+                                cursorShape: Qt.PointingHandCursor }
                 }
             }
-
-            // Cronologia
-            ColumnLayout {
-                Layout.preferredWidth: 300
-                Layout.fillHeight: true
-                spacing: 14
-                SectionLabel { text: "In precedenza"; color: T.n600 }
-                Text { text: "Abitacolo pre-riscaldato a 21° alle 08:40."; font.family: T.serif; font.pixelSize: 16; color: T.n700; wrapMode: Text.WordWrap; Layout.fillWidth: true }
-                Text { text: "Pioggia prevista alle 17:00 — ricordato il box da tetto."; font.family: T.serif; font.pixelSize: 16; color: T.n700; wrapMode: Text.WordWrap; Layout.fillWidth: true }
-                Text { text: "Pressione gomme registrata, anteriore sinistra -0.2 bar."; font.family: T.serif; font.pixelSize: 16; color: T.n700; wrapMode: Text.WordWrap; Layout.fillWidth: true }
-                Item { Layout.fillHeight: true }
-            }
         }
+    }
+
+    // Frase a destra
+    ColumnLayout {
+        anchors.right: parent.right
+        anchors.rightMargin: 40
+        anchors.verticalCenter: parent.verticalCenter
+        spacing: 2
+        Text { Layout.alignment: Qt.AlignRight; text: "Natural conversation."
+               font.family: T.sans; font.pixelSize: 15; color: T.n700 }
+        Text { Layout.alignment: Qt.AlignRight; text: "Real assistance."
+               font.family: T.sans; font.pixelSize: 15; color: T.n700 }
+        Text { Layout.alignment: Qt.AlignRight; text: "On every journey."
+               font.family: T.sans; font.pixelSize: 15; color: T.n700 }
     }
 }

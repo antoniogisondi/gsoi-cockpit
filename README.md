@@ -27,9 +27,10 @@ Ricostruito sui mockup ufficiali di GSOI Automotive OS:
   4 **tile** rapide (`Tile.qml`) e 4 **card** informative (`InfoCard.qml`).
 - Font imbarcati (OFL): **Barlow** (UI, 3 pesi) + **Saira Condensed** (numeri) +
   icone **Phosphor**.
-
-> Le schermate Navigation / Media / Phone / AI / Settings usano già il tema
-> scuro e vengono ridisegnate una per una sui rispettivi pannelli del mockup.
+- **Schermate** ridisegnate sui pannelli del mockup: **Navigation** (mappa +
+  card svolta + N/3D/zoom), **Media** (radio + lista stazioni + equalizzatore),
+  **Phone** (dispositivo + azioni), **AI** (orb + chip suggeriti), **Settings**
+  (elenco + pannello scenografico).
 
 ## Dati live
 
