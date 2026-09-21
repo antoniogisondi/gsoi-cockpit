@@ -26,19 +26,18 @@ Rectangle {
         anchors.rightMargin: 16
         spacing: 0
 
-        // --- Wordmark ---
-        RowLayout {
-            spacing: 8
-            Text {
-                text: "GSOI"
-                font.family: T.num; font.pixelSize: 30; font.weight: Font.DemiBold
-                font.letterSpacing: 1; color: T.text
-            }
+        // --- Wordmark (logo GSOI) ---
+        Image {
+            source: "images/gsoi-logo.png"
+            fillMode: Image.PreserveAspectFit
+            Layout.preferredWidth: 108
+            Layout.preferredHeight: 25
+            smooth: true; mipmap: true
         }
         Text {
             text: "Automotive OS"
             font.family: T.sans; font.pixelSize: 14; color: T.n700
-            Layout.topMargin: 1
+            Layout.topMargin: 3
         }
         Text {
             text: "DRIVEN BY INTELLIGENCE"

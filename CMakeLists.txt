@@ -55,6 +55,8 @@ qt_add_qml_module(gsoi-cockpit
         fonts/Barlow-Medium.ttf
         fonts/Barlow-SemiBold.ttf
         fonts/SairaCondensed-SemiBold.ttf
+        images/hero.png
+        images/gsoi-logo.png
 )
 
 target_link_libraries(gsoi-cockpit PRIVATE Qt6::Quick Qt6::Gui)

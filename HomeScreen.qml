@@ -32,7 +32,10 @@ Item {
         anchors.right: parent.right
         height: Math.round(parent.height * 0.62)
 
-        HeroBackground { anchors.fill: parent; source: root.heroSource }
+        HeroBackground {
+            anchors.fill: parent
+            source: root.heroSource !== "" ? root.heroSource : Qt.resolvedUrl("images/hero.png")
+        }
 
         Column {
             anchors.left: parent.left
