@@ -65,10 +65,10 @@ Item {
             rowSpacing: 14; columnSpacing: 14
             Repeater {
                 model: [
-                    ["lightning",          "Find a charging station nearby"],
-                    ["music-notes",        "Play some relaxing music"],
-                    ["thermometer-simple", "What’s the weather at my destination?"],
-                    ["sparkle",            "Give me a summary of today’s news"]
+                    ["search", "Find a charging station nearby"],
+                    ["media",  "Play some relaxing music"],
+                    ["cloud",  "What’s the weather at my destination?"],
+                    ["news",   "Give me a summary of today’s news"]
                 ]
                 delegate: Rectangle {
                     required property var modelData

@@ -57,6 +57,42 @@ qt_add_qml_module(gsoi-cockpit
         fonts/SairaCondensed-SemiBold.ttf
         images/hero.png
         images/gsoi-logo.png
+        images/navigation-map.png
+        images/icons/ai.svg
+        images/icons/bag.svg
+        images/icons/bluetooth.svg
+        images/icons/calendar.svg
+        images/icons/car.svg
+        images/icons/chevron.svg
+        images/icons/clock.svg
+        images/icons/cloud.svg
+        images/icons/defrost.svg
+        images/icons/dial.svg
+        images/icons/display.svg
+        images/icons/fan.svg
+        images/icons/home.svg
+        images/icons/info.svg
+        images/icons/media.svg
+        images/icons/message.svg
+        images/icons/nav.svg
+        images/icons/news.svg
+        images/icons/next.svg
+        images/icons/pause.svg
+        images/icons/person.svg
+        images/icons/phone.svg
+        images/icons/pin.svg
+        images/icons/play.svg
+        images/icons/previous.svg
+        images/icons/radio.svg
+        images/icons/rear.svg
+        images/icons/route.svg
+        images/icons/search.svg
+        images/icons/seat.svg
+        images/icons/settings.svg
+        images/icons/signal.svg
+        images/icons/speaker.svg
+        images/icons/sun.svg
+        images/icons/wifi.svg
 )
 
 target_link_libraries(gsoi-cockpit PRIVATE Qt6::Quick Qt6::Gui)

@@ -2,27 +2,13 @@ import QtQuick
 import QtQuick.Layouts
 import "Theme.js" as T
 
-// Home di GSOI Automotive OS (mockup): hero "Good morning" in alto, riga di 4
-// tile rapide sul bordo basso dell'hero, riga di 4 card informative sotto.
-// Layout ad ANCORE con proporzioni esplicite (niente sovrapposizioni).
+// Home di GSOI Automotive OS (mockup): hero "Good morning" con foto reale, riga
+// di 4 tile rapide, riga di 4 card informative. Layout ad ancore.
 Item {
     id: root
     property var vehicle: null
-    property url heroSource: ""              // foto reale (se disponibile)
+    property url heroSource: ""
     signal openScreen(string screen)
-
-    component Chevron: Canvas {
-        width: 10; height: 15
-        onPaint: {
-            var c = getContext("2d"); c.reset();
-            c.strokeStyle = T.n600; c.lineWidth = 1.8; c.lineCap = "round"; c.lineJoin = "round";
-            c.beginPath(); c.moveTo(3, 2.5); c.lineTo(8, 7.5); c.lineTo(3, 12.5); c.stroke();
-        }
-    }
-
-    component InfoCard: Rectangle {
-        radius: 14; color: T.glass; border.width: 1; border.color: T.glassBorder
-    }
 
     // ============================================================== HERO (62%)
     Item {
@@ -65,26 +51,14 @@ Item {
             anchors.rightMargin: 40
             anchors.bottomMargin: 24
             spacing: 18
-            Tile {
-                Layout.fillWidth: true; Layout.preferredHeight: 92
-                icon: "navigation-arrow"; title: "Navigation"; subtitle: "Munich"
-                onClicked: root.openScreen("nav")
-            }
-            Tile {
-                Layout.fillWidth: true; Layout.preferredHeight: 92
-                icon: "speaker-high"; title: "Radio"; subtitle: "87.5 MHz"
-                onClicked: root.openScreen("media")
-            }
-            Tile {
-                Layout.fillWidth: true; Layout.preferredHeight: 92
-                icon: "bluetooth-connected"; title: "Bluetooth"; subtitle: "Pixel 8 Pro"
-                onClicked: root.openScreen("phone")
-            }
-            Tile {
-                Layout.fillWidth: true; Layout.preferredHeight: 92
-                icon: "sparkle"; title: "AI Assistant"; subtitle: "Ready"
-                onClicked: root.openScreen("agent")
-            }
+            Tile { Layout.fillWidth: true; Layout.preferredHeight: 92
+                   icon: "nav"; title: "Navigation"; subtitle: "Munich"; onClicked: root.openScreen("nav") }
+            Tile { Layout.fillWidth: true; Layout.preferredHeight: 92
+                   icon: "radio"; title: "Radio"; subtitle: "87.5 MHz"; onClicked: root.openScreen("media") }
+            Tile { Layout.fillWidth: true; Layout.preferredHeight: 92
+                   icon: "bluetooth"; title: "Bluetooth"; subtitle: "Pixel 8 Pro"; onClicked: root.openScreen("phone") }
+            Tile { Layout.fillWidth: true; Layout.preferredHeight: 92
+                   icon: "ai"; title: "AI Assistant"; subtitle: "Ready"; onClicked: root.openScreen("agent") }
         }
     }
 
@@ -100,82 +74,129 @@ Item {
         anchors.bottomMargin: 22
         spacing: 18
 
-        // Meteo
-        InfoCard {
-            Layout.fillWidth: true; Layout.fillHeight: true
-            ColumnLayout {
-                anchors.fill: parent; anchors.margins: 16; spacing: 8
-                RowLayout {
-                    Layout.fillWidth: true; spacing: 9
-                    Icon { name: "thermometer-simple"; size: 17; color: T.n600 }
-                    Text { Layout.fillWidth: true; text: "Munich"
-                           font.family: T.sans; font.pixelSize: 14; color: T.n700 }
-                    Chevron {}
-                }
-                Item { Layout.fillHeight: true }
-                RowLayout {
-                    Layout.fillWidth: true; spacing: 12
-                    Text { text: "24°"; font.family: T.num; font.pixelSize: 40
-                           font.weight: Font.DemiBold; color: T.text; Layout.alignment: Qt.AlignVCenter }
-                    Text { text: "Clear skies"; font.family: T.sans; font.pixelSize: 15
-                           color: T.n700; Layout.alignment: Qt.AlignVCenter }
-                    Item { Layout.fillWidth: true }
-                }
-            }
-        }
-
-        // Prossima meta
-        InfoCard {
-            Layout.fillWidth: true; Layout.fillHeight: true
-            ColumnLayout {
-                anchors.fill: parent; anchors.margins: 16; spacing: 8
-                RowLayout {
-                    Layout.fillWidth: true; spacing: 9
-                    Icon { name: "navigation-arrow"; size: 17; color: T.n600 }
-                    Text { Layout.fillWidth: true; text: "Next destination"
-                           font.family: T.sans; font.pixelSize: 14; color: T.n700 }
-                    Chevron {}
-                }
-                Item { Layout.fillHeight: true }
-                Text { text: "BMW Welt"; font.family: T.sans; font.pixelSize: 20
-                       font.weight: Font.DemiBold; color: T.text }
-                Text { text: "Am Olympiapark 1, München"; font.family: T.sans
-                       font.pixelSize: 13; color: T.n600; Layout.fillWidth: true; elide: Text.ElideRight }
-                Text { text: "28 min · 12 km"; font.family: T.sans; font.pixelSize: 14
-                       color: T.accent; topPadding: 3 }
-            }
-        }
-
-        // Agenda
-        InfoCard {
-            Layout.fillWidth: true; Layout.fillHeight: true
-            ColumnLayout {
-                anchors.fill: parent; anchors.margins: 16; spacing: 8
-                RowLayout {
-                    Layout.fillWidth: true; spacing: 9
-                    Text { Layout.fillWidth: true; text: "Today"
-                           font.family: T.sans; font.pixelSize: 14; color: T.n700 }
-                    Chevron {}
-                }
-                Item { Layout.fillHeight: true }
-                Text { text: "Team Sync"; font.family: T.sans; font.pixelSize: 20
-                       font.weight: Font.DemiBold; color: T.text }
-                Text { text: "11:00 – 11:30"; font.family: T.sans; font.pixelSize: 14; color: T.n700 }
-                Text { text: "Microsoft Teams"; font.family: T.sans; font.pixelSize: 13
-                       color: T.n600; topPadding: 2 }
-            }
-        }
-
-        // Pannello brand
+        // ---- Meteo (con thumbnail paesaggio) ----
         Rectangle {
             Layout.fillWidth: true; Layout.fillHeight: true
-            radius: 14
+            radius: 14; color: T.glass; border.width: 1; border.color: T.glassBorder; clip: true
+            Image {
+                anchors.fill: parent
+                source: Qt.resolvedUrl("images/hero.png")
+                sourceClipRect: Qt.rect(520, 40, 900, 560)
+                fillMode: Image.PreserveAspectCrop
+                opacity: 0.55
+            }
+            Rectangle { anchors.fill: parent; color: "#99060f19" }
+            ColumnLayout {
+                anchors.fill: parent; anchors.margins: 16; spacing: 6
+                RowLayout {
+                    Layout.fillWidth: true; spacing: 9
+                    Icon { name: "pin"; size: 17 }
+                    Text { Layout.fillWidth: true; text: "Munich"
+                           font.family: T.sans; font.pixelSize: 15; color: T.text }
+                    Icon { name: "chevron"; size: 15 }
+                }
+                Item { Layout.fillHeight: true }
+                RowLayout {
+                    spacing: 10
+                    Icon { name: "sun"; size: 34; Layout.alignment: Qt.AlignVCenter }
+                    Text { text: "24°C"; font.family: T.num; font.pixelSize: 38
+                           font.weight: Font.DemiBold; color: T.text; Layout.alignment: Qt.AlignVCenter }
+                }
+                Text { text: "Clear skies"; font.family: T.sans; font.pixelSize: 15; color: T.n800 }
+            }
+        }
+
+        // ---- Prossima meta ----
+        Rectangle {
+            Layout.fillWidth: true; Layout.fillHeight: true
+            radius: 14; color: T.glass; border.width: 1; border.color: T.glassBorder
+            ColumnLayout {
+                anchors.fill: parent; anchors.margins: 16; spacing: 6
+                RowLayout {
+                    Layout.fillWidth: true; spacing: 9
+                    Icon { name: "bag"; size: 17 }
+                    Text { Layout.fillWidth: true; text: "Next destination"
+                           font.family: T.sans; font.pixelSize: 15; color: T.n700 }
+                    Icon { name: "chevron"; size: 15 }
+                }
+                Item { Layout.fillHeight: true }
+                RowLayout {
+                    spacing: 12
+                    Icon { name: "nav"; size: 26; Layout.alignment: Qt.AlignVCenter }
+                    ColumnLayout {
+                        spacing: 1
+                        Text { text: "BMW Welt"; font.family: T.sans; font.pixelSize: 20
+                               font.weight: Font.DemiBold; color: T.text }
+                        Text { text: "Am Olympiapark 1, München"; font.family: T.sans
+                               font.pixelSize: 13; color: T.n600 }
+                    }
+                }
+                Text { text: "28 min · 12 km"; font.family: T.sans; font.pixelSize: 14; color: T.n700 }
+            }
+        }
+
+        // ---- Agenda ----
+        Rectangle {
+            Layout.fillWidth: true; Layout.fillHeight: true
+            radius: 14; color: T.glass; border.width: 1; border.color: T.glassBorder
+            ColumnLayout {
+                anchors.fill: parent; anchors.margins: 16; spacing: 6
+                RowLayout {
+                    Layout.fillWidth: true; spacing: 9
+                    Icon { name: "calendar"; size: 17 }
+                    Text { Layout.fillWidth: true; text: "Today"
+                           font.family: T.sans; font.pixelSize: 15; color: T.n700 }
+                    Icon { name: "chevron"; size: 15 }
+                }
+                Item { Layout.fillHeight: true }
+                RowLayout {
+                    spacing: 12
+                    Rectangle { width: 4; height: 52; radius: 2; color: T.accent; Layout.alignment: Qt.AlignVCenter }
+                    ColumnLayout {
+                        spacing: 1
+                        Text { text: "Team Sync"; font.family: T.sans; font.pixelSize: 20
+                               font.weight: Font.DemiBold; color: T.text }
+                        Text { text: "11:00 – 11:30"; font.family: T.sans; font.pixelSize: 14; color: T.n700 }
+                        Text { text: "Microsoft Teams"; font.family: T.sans; font.pixelSize: 13; color: T.n600 }
+                    }
+                }
+            }
+        }
+
+        // ---- Pannello brand (onde animate) ----
+        Rectangle {
+            Layout.fillWidth: true; Layout.fillHeight: true
+            radius: 14; clip: true
             gradient: Gradient {
                 orientation: Gradient.Horizontal
                 GradientStop { position: 0.0; color: "#0e1420" }
                 GradientStop { position: 1.0; color: "#0a1622" }
             }
             border.width: 1; border.color: T.glassBorder
+
+            Canvas {
+                id: waves
+                anchors.fill: parent
+                property real phase: 0
+                onPaint: {
+                    var ctx = getContext("2d"); ctx.reset();
+                    for (var j = 0; j < 34; j++) {
+                        ctx.beginPath();
+                        ctx.strokeStyle = "rgba(41,198,255," + (0.10 + j * 0.004) + ")";
+                        ctx.lineWidth = 0.8;
+                        for (var x = 0; x < width; x += 4) {
+                            var y = height * 0.55 + Math.sin(x / 90 + j * 0.05 + phase) * 42 + j * 2 - x * 0.10;
+                            if (x === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+                        }
+                        ctx.stroke();
+                    }
+                }
+                NumberAnimation on phase {
+                    from: 0; to: Math.PI * 2; duration: 9000; loops: Animation.Infinite; running: true
+                }
+                onPhaseChanged: requestPaint()
+            }
+
             ColumnLayout {
                 anchors.right: parent.right
                 anchors.verticalCenter: parent.verticalCenter
