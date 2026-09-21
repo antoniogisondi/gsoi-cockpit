@@ -90,8 +90,9 @@ Item {
         anchors.fill: parent
         gradient: Gradient {
             orientation: Gradient.Horizontal
-            GradientStop { position: 0.0; color: "#e6070b12" }
-            GradientStop { position: 0.45; color: "#66070b12" }
+            GradientStop { position: 0.0; color: "#f2070b12" }
+            GradientStop { position: 0.34; color: "#d9070b12" }
+            GradientStop { position: 0.60; color: "#73070b12" }
             GradientStop { position: 1.0; color: "#00070b12" }
         }
     }
