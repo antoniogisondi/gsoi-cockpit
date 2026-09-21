@@ -1,11 +1,17 @@
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
+#include <QFontDatabase>
 
 int main(int argc, char *argv[])
 {
     QGuiApplication app(argc, argv);
     app.setApplicationName("GSOI Cluster");
     app.setOrganizationName("GSOI");
+
+    // Font imbarcati (stile quadro): Saira Condensed per i numeri, Barlow per
+    // le etichette. Sono risorse del modulo GsoiCluster (vedi CMakeLists).
+    QFontDatabase::addApplicationFont(":/qt/qml/GsoiCluster/fonts/SairaCondensed-SemiBold.ttf");
+    QFontDatabase::addApplicationFont(":/qt/qml/GsoiCluster/fonts/Barlow-Medium.ttf");
 
     // app_id Wayland: Weston (kiosk-shell) lo usa per piazzare il quadro sulla
     // 2a uscita HDMI (dietro al volante). Vedi weston.ini in meta-gsoi.

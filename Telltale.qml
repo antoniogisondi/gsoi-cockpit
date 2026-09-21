@@ -1,5 +1,5 @@
 import QtQuick
-import "Theme.js" as T
+import "ClusterTheme.js" as C
 
 // Una singola spia del quadro (telltale), disegnata a vettori in un riquadro
 // normalizzato 24x24. Colori standard automotive per tipo (verde/blu/ambra/
@@ -11,12 +11,17 @@ Item {
     width: size
     height: size
 
+    // Se impostato (alpha > 0) sovrascrive il colore standard (es. spia usata
+    // come indicatore neutro in una barra carburante/temperatura).
+    property color colorOverride: "transparent"
+
     // Colore standard per tipo di spia.
-    readonly property color _green: "#37b24d"
-    readonly property color _blue:  "#1971c2"
-    readonly property color _amber: "#e29500"
-    readonly property color _red:   "#e5322d"
+    readonly property color _green: "#37e08a"
+    readonly property color _blue:  "#55a6ff"
+    readonly property color _amber: "#f4b524"
+    readonly property color _red:   "#ff4d3d"
     readonly property color col: {
+        if (colorOverride.a > 0) return colorOverride;
         switch (kind) {
         case "turnLeft": case "turnRight": return _green;
         case "highBeam": return _blue;
@@ -178,7 +183,7 @@ Item {
                 ctx.beginPath(); ctx.arc(12, 12, 10.5, 0, Math.PI * 2, false); ctx.stroke();
                 ctx.setLineDash([]);
                 ctx.fillStyle = root.col;
-                ctx.font = "700 8px '" + T.serif + "'";
+                ctx.font = "700 8px '" + C.display + "'";
                 ctx.textAlign = "center"; ctx.textBaseline = "middle";
                 ctx.fillText("ABS", 12, 12.5);
                 break;

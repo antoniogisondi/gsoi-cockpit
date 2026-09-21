@@ -1,5 +1,4 @@
 import QtQuick
-import "Theme.js" as T
 
 // Barra delle spie: mostra, centrate, solo le spie ACCESE (come un quadro
 // digitale). Ordine per gravità: rosse, poi ambra, poi blu.
@@ -7,7 +6,7 @@ Row {
     id: root
     property var cd: null           // ClusterData
     property real cell: 34
-    spacing: 14
+    spacing: 16
 
     // Elenco {kind, on} in ordine di priorità; il Repeater ne mostra solo gli on.
     readonly property var slots: !cd ? [] : [
@@ -32,14 +31,5 @@ Row {
             kind: modelData.kind
             size: root.cell
         }
-    }
-
-    // Nessuna spia accesa: un piccolo "ok" discreto per non lasciare il vuoto.
-    Text {
-        visible: root.active.length === 0
-        text: "OK"
-        font.family: T.serif
-        font.pixelSize: root.cell * 0.5
-        color: T.n500
     }
 }

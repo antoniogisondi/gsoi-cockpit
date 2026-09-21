@@ -63,13 +63,17 @@ qt_add_qml_module(gsoi-cluster
     URI GsoiCluster
     VERSION 1.0
     QML_FILES
-        Theme.js
+        ClusterTheme.js
         ClusterData.qml
-        Gauge.qml
+        Wing.qml
+        MiniBar.qml
         Telltale.qml
         TelltaleBar.qml
         TurnSignal.qml
         ClusterMain.qml
+    RESOURCES
+        fonts/SairaCondensed-SemiBold.ttf
+        fonts/Barlow-Medium.ttf
 )
 
 target_link_libraries(gsoi-cluster PRIVATE Qt6::Quick Qt6::Gui)
