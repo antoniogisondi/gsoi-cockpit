@@ -21,6 +21,9 @@ Window {
     // Dati live da Jarvis Mini (server HTTP locale).
     VehicleData { id: vehicle }
 
+    // Stato di alimentazione (standby-orologio / acceso), come la nav di serie.
+    PowerData { id: power; vehicle: vehicle }
+
     ColumnLayout {
         anchors.fill: parent
         spacing: 0
@@ -72,6 +75,21 @@ Window {
         }
     }
 
+    // --- STANDBY (schermo orologio) -----------------------------------------
+    // A quadro in ACC / sportello aperto il cockpit resta sospeso e mostra
+    // l'orologio su fondo nero, come la Media Nav di serie. Si accende col
+    // pulsante power (tasto 'P' in mock) o all'avvio del motore. Sta SOTTO la
+    // retrocamera: la sicurezza (retromarcia) ha sempre la precedenza.
+    Loader {
+        anchors.fill: parent
+        z: 500
+        active: !power.powered
+        visible: active
+        sourceComponent: Component {
+            StandbyScreen { onWakeRequested: power.wake() }
+        }
+    }
+
     // --- RETROCAMERA + SENSORI DI PARCHEGGIO --------------------------------
     // Funzione di sicurezza INDIPENDENTE dall'AI (niente Jarvis Mini/LLM).
     // Appena si innesta la retromarcia compare a tutto schermo, sopra al
@@ -100,7 +118,9 @@ Window {
         }
     }
 
-    // Trigger di TEST (mock, in QEMU): 'R' innesta/toglie la retromarcia.
+    // Trigger di TEST (mock, in QEMU): 'R' innesta/toglie la retromarcia,
+    // 'P' simula il pulsante power (accende / manda in standby-orologio).
     Shortcut { sequence: "R"; onActivated: reverse.keyReverse = !reverse.keyReverse }
+    Shortcut { sequence: "P"; onActivated: power.toggle() }
     Shortcut { sequence: "Esc"; onActivated: Qt.quit() }
 }
